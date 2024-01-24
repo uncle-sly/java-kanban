@@ -1,4 +1,4 @@
-package model;
+package ru.yandex.app.model;
 
 public class Task {
     private int uid;
@@ -14,6 +14,7 @@ public class Task {
 
     public Task(String name) {
         this.name = name;
+        this.status = "NEW";
     }
 
     public Task() {

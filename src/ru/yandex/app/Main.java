@@ -1,10 +1,11 @@
-import model.Epic;
-import model.SubTask;
-import model.Task;
-import service.TaskManager;
+package ru.yandex.app;
+
+import ru.yandex.app.model.Epic;
+import ru.yandex.app.model.SubTask;
+import ru.yandex.app.model.Task;
+import ru.yandex.app.service.TaskManager;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 public class Main {
@@ -35,14 +36,14 @@ public class Main {
         System.out.println("Get task by ID: " + taskFromManager1);
 //        Get All Tasks
         ArrayList<Task> allTasks = taskManager.getAllTasks();
-        System.out.println("\nAll Tasks: " + allTasks);
+        System.out.println("\nAll Tasks : " + allTasks);
 ////        Delete All Tasks
 ////        taskManager.delAllTasks();
 
 //        Epics //
 //        create Epic
         Epic epic1 = taskManager.createEpic(new Epic("New Epic 1"));
-        System.out.println("Created Epic: " + epic1);
+        System.out.println("\n\n\nCreated Epic: " + epic1);
         Epic epic2 = taskManager.createEpic(new Epic("New Epic 2"));
         System.out.println("Created Epic: " + epic2);
 
@@ -52,14 +53,14 @@ public class Main {
         List<Epic> allEpics = taskManager.getAllEpics();
         System.out.println("\nAll Epics: " + allEpics);
         //        Create SubTask
-        SubTask subTask1 = taskManager.createSubTask(new SubTask("New SubTask 1", "department 1" ,"NEW",epic1));
+        SubTask subTask1 = taskManager.createSubTask(new SubTask("New SubTask 1", "department 1" ,"NEW",epic1.getUid()));
         System.out.println("\nCreated SubTask: " + subTask1);
-        SubTask subTask2 = taskManager.createSubTask(new SubTask("New SubTask 2", "department 2" ,"NEW",epic1));
+        SubTask subTask2 = taskManager.createSubTask(new SubTask("New SubTask 2", "department 2" ,"NEW",epic1.getUid()));
         System.out.println("Created SubTask: " + subTask2);
-        SubTask subTask3 = taskManager.createSubTask(new SubTask("New SubTask 3", "department 3" ,"NEW",epic2));
+        SubTask subTask3 = taskManager.createSubTask(new SubTask("New SubTask 3", "department 3" ,"NEW",epic2.getUid()));
         System.out.println("Created SubTask: " + subTask3);
         //        Get list of Epic's Subtasks
-        ArrayList<SubTask> listOfEpicSubTasks = taskManager.getListOfEpicSubTasks(epic1);
+        ArrayList<SubTask> listOfEpicSubTasks = taskManager.getListOfEpicSubTasks(epic1.getUid());
         System.out.println("\nList of Epic SubTasks: " + listOfEpicSubTasks);
         //        Get All subTasks
         ArrayList<SubTask> allSubTasks = taskManager.getAllSubTasks();
@@ -67,7 +68,7 @@ public class Main {
         //        Update subTask
         subTask2.setName("New SubTask 2A");
         subTask2.setDescription("department 4");
-        subTask2.setStatus("DONE");
+        subTask2.setStatus("IN_PROGRESS");
         taskManager.updateSubTask(subTask2);
 
         subTask3.setStatus("DONE");
@@ -96,10 +97,10 @@ public class Main {
 //        taskManager.delAllEpics();
 //        allEpics = taskManager.getAllEpics();
 //        System.out.println("All Epics: " + allEpics);
-////      update Epic
-//        epic1.setDescription("Epic for 1 Department");
-//        taskManager.updateEpic(epic1);
-//        System.out.println("Get Epic by ID: " + epicFromManager1);
+//      update Epic
+        epic1.setDescription("Epic for 1 Department");
+        taskManager.updateEpic(epic1);
+        System.out.println("\nGet Epic by ID: " + epicFromManager1);
 //        SubTasks //
 //        Delete All subTasks
 //        taskManager.delAllSubTasks();
