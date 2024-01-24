@@ -1,7 +1,7 @@
 package ru.yandex.app.model;
 
 public class SubTask extends Task {
-    private int epicId;
+    private final int epicId;
 
     public SubTask(String name, String description, String status, int epicId) {
         super(name, description, status);
@@ -12,7 +12,4 @@ public class SubTask extends Task {
         return epicId;
     }
 
-    public void setEpicId(int epicId) {
-        this.epicId = epicId;
-    }
 }
