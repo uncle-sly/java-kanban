@@ -53,13 +53,28 @@ public class Task {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Task)) return false;
+
+        Task task = (Task) o;
+
+        return uid == task.uid;
+    }
+
+    @Override
+    public int hashCode() {
+        return uid;
+    }
+
+    @Override
     public String toString() {
-        return "Task{" +
+        return "\nTask{" +
                "id=" + uid +
                ", name='" + name + '\'' +
                ", status='" + status+ '\'' +
                ", description='" + description + '\'' +
-               "}";
+               "}\n";
     }
 
 }
