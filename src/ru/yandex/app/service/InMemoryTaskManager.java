@@ -17,7 +17,6 @@ public class InMemoryTaskManager implements TaskManager {
     private final HistoryManager tasksViewHistory;
 
 
-
     public InMemoryTaskManager(HistoryManager tasksViewHistory) {
         this.tasks = new HashMap<>();
         this.epics = new HashMap<>();
@@ -38,8 +37,9 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public Task getTaskById(int id) {
-        if (tasks.get(id)!=null) {
-        tasksViewHistory.addInTasksViewHistory(tasks.get(id));}
+        if (tasks.get(id) != null) {
+            tasksViewHistory.addInTasksViewHistory(tasks.get(id));
+        }
         return tasks.get(id);
     }
 
@@ -215,8 +215,5 @@ public class InMemoryTaskManager implements TaskManager {
             existedEpic.setStatus(epicStatus);
         }
     }
-
-
-
 
 }

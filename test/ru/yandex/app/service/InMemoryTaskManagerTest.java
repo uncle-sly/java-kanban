@@ -19,7 +19,7 @@ class InMemoryTaskManagerTest {
         InMemoryTaskManager inMemoryTaskManager = new InMemoryTaskManager(new InMemoryHistoryManager());
         inMemoryTaskManager.createTask(new Task());
         inMemoryTaskManager.createTask(new Task());
-        assertEquals(inMemoryTaskManager.getAllTasks().size(),2, "should be equals");
+        assertEquals(2, inMemoryTaskManager.getAllTasks().size(), "should be equals");
     }
 
     @DisplayName("Tasks should be equals by ID")
@@ -38,9 +38,9 @@ class InMemoryTaskManagerTest {
         Task newTask = inMemoryTaskManager.createTask(new Task("Task N1"));
 
         assertNotNull(newTask, "should be Not Null");
-        assertNotEquals(newTask.getUid(),0, "should be !equal 0");
+        assertNotEquals(0, newTask.getUid(), "should be !equal 0");
     }
-
+    @DisplayName("Task IDs should be same")
     @Test
     void updateTask() {
         InMemoryTaskManager inMemoryTaskManager = new InMemoryTaskManager(new InMemoryHistoryManager());
@@ -54,7 +54,7 @@ class InMemoryTaskManagerTest {
 
         assertEquals(newTaskIdExpectedId,newTaskId, "IDs should be equals");
     }
-    @DisplayName("SubTasks should ne Null and Epic should have NEW status")
+    @DisplayName("SubTasks should be Null and Epic should have NEW status")
     @Test
     void delAllSubTasks() {
         InMemoryTaskManager inMemoryTaskManager = new InMemoryTaskManager(new InMemoryHistoryManager());
@@ -63,7 +63,7 @@ class InMemoryTaskManagerTest {
         inMemoryTaskManager.createSubTask(new SubTask("sub 2","desc", "DONE", epic1.getUid()));
         inMemoryTaskManager.delAllSubTasks();
 
-        assertEquals("NEW", epic1.getStatus(), "Epics status should ne NEW");
+        assertEquals("NEW", epic1.getStatus(), "Epics status should be NEW");
         assertEquals(new ArrayList<>(), epic1.getSubTasksUids(), "subTasks should be Empty");
     }
 
@@ -77,7 +77,7 @@ class InMemoryTaskManagerTest {
         int tasksViewHistorySize = inMemoryTaskManager.getHistory().size();
 
         assertNotNull(subTaskExpected);
-        assertEquals(tasksViewHistorySize, 1,  "size should not be empty");
+        assertEquals(1, tasksViewHistorySize,  "size should not be empty");
     }
     @DisplayName("Should return SubTask and put SubTask ID in Epic")
     @Test
@@ -94,7 +94,6 @@ class InMemoryTaskManagerTest {
     @Test
     void createSubTaskWithEmptyEpic() {
         InMemoryTaskManager inMemoryTaskManager = new InMemoryTaskManager(new InMemoryHistoryManager());
-        //Epic epic1 = inMemoryTaskManager.createEpic(new Epic("Epic 1"));
         SubTask subTask1 = inMemoryTaskManager.createSubTask(new SubTask("sub 1","desc", "DONE", 2));
         assertNull(subTask1);
     }
@@ -104,15 +103,14 @@ class InMemoryTaskManagerTest {
         InMemoryTaskManager inMemoryTaskManager = new InMemoryTaskManager(new InMemoryHistoryManager());
         Epic epic1 = inMemoryTaskManager.createEpic(new Epic("Epic 1"));
         SubTask subTask1 = inMemoryTaskManager.createSubTask(new SubTask("sub 1","desc", "DONE", epic1.getUid()));
-
         subTask1.setName("sub 1A");
         subTask1.setDescription("new desc");
         inMemoryTaskManager.updateSubTask(subTask1);
         SubTask subTaskExpected = inMemoryTaskManager.getSubTaskById(subTask1.getUid());
 
-        assertEquals(subTaskExpected.getUid(),subTask1.getUid(), "IDs should be equals");
+        assertEquals(subTaskExpected.getUid(), subTask1.getUid(), "IDs should be equals");
     }
-    @DisplayName("subtasks and epic shouldn't contain subTaskId")
+    @DisplayName("Subtasks and Epic shouldn't contain deleted subTaskId")
     @Test
     void delSubTaskById() {
         InMemoryTaskManager inMemoryTaskManager = new InMemoryTaskManager(new InMemoryHistoryManager());
@@ -120,31 +118,90 @@ class InMemoryTaskManagerTest {
         SubTask subTask1 = inMemoryTaskManager.createSubTask(new SubTask("sub 1","desc", "DONE", epic1.getUid()));
         int subTask1Id = subTask1.getUid();
         inMemoryTaskManager.delSubTaskById(subTask1Id);
+
         assertFalse(epic1.getSubTasksUids().contains(subTask1.getUid()));
         assertFalse(inMemoryTaskManager.getAllSubTasks().contains(subTask1));
     }
 
+    @DisplayName("should return Epic and increase tasksViewHistory")
     @Test
     void getEpicById() {
+        InMemoryTaskManager inMemoryTaskManager = new InMemoryTaskManager(new InMemoryHistoryManager());
+        Epic epic1 = inMemoryTaskManager.createEpic(new Epic("Epic 1"));
+        Epic epicExpected = inMemoryTaskManager.getEpicById(epic1.getUid());
+        String taskType = epicExpected.getClass().getSimpleName();
+
+        assertNotNull(epicExpected);
+        assertEquals("Epic", taskType,  "both should be Epic");
     }
 
+    @DisplayName("result shouldn't be empty, with ID and Epic type")
     @Test
     void createEpic() {
+        InMemoryTaskManager inMemoryTaskManager = new InMemoryTaskManager(new InMemoryHistoryManager());
+        Epic epic1 = inMemoryTaskManager.createEpic(new Epic("Epic 1"));
+        String taskType = epic1.getClass().getSimpleName();
+
+        assertNotNull(epic1);
+        assertNotEquals(0, epic1.getUid(), "ID should not be 0");
+        assertEquals("Epic", taskType,  "both should be Epic");
     }
 
+    @DisplayName("Should be the same Epic ID and Epic Status")
     @Test
     void updateEpic() {
+        InMemoryTaskManager inMemoryTaskManager = new InMemoryTaskManager(new InMemoryHistoryManager());
+        Epic epic1 = inMemoryTaskManager.createEpic(new Epic("Epic 1"));
+        epic1.setName("Epic 11B");
+        epic1.setDescription("new desc");
+        inMemoryTaskManager.updateEpic(epic1);
+        Epic epicExpected = inMemoryTaskManager.getEpicById(epic1.getUid());
+
+        assertEquals(epicExpected.getUid(), epic1.getUid(), "IDs should be equals");
+        assertEquals(epicExpected.getStatus(), epic1.getStatus(), " Status should be equals");
     }
 
+    @DisplayName("Should delete Epic and  all Epics tasks")
     @Test
     void delEpicById() {
+        InMemoryTaskManager inMemoryTaskManager = new InMemoryTaskManager(new InMemoryHistoryManager());
+        Epic epic1 = inMemoryTaskManager.createEpic(new Epic("Epic 1"));
+        SubTask subTask1 = inMemoryTaskManager.createSubTask(new SubTask("sub 1","desc", "DONE", epic1.getUid()));
+        SubTask subTask2 = inMemoryTaskManager.createSubTask(new SubTask("sub 2","desc", "DONE", epic1.getUid()));
+        inMemoryTaskManager.delEpicById(epic1.getUid());
+
+        assertNull(inMemoryTaskManager.getEpicById(epic1.getUid()));
+        assertNull(inMemoryTaskManager.getSubTaskById(subTask1.getUid()), "should be null");
+        assertNull(inMemoryTaskManager.getSubTaskById(subTask2.getUid()), "should be null");
+        assertFalse(inMemoryTaskManager.getAllSubTasks().contains(subTask1));
+        assertFalse(inMemoryTaskManager.getAllSubTasks().contains(subTask2));
     }
 
+    @DisplayName("Epic ID in subtasks should be equals Epic ID")
     @Test
     void getListOfEpicSubTasks() {
+        InMemoryTaskManager inMemoryTaskManager = new InMemoryTaskManager(new InMemoryHistoryManager());
+        Epic epic1 = inMemoryTaskManager.createEpic(new Epic("Epic 1"));
+        SubTask subTask1 = inMemoryTaskManager.createSubTask(new SubTask("sub 1","desc", "DONE", epic1.getUid()));
+        SubTask subTask2 = inMemoryTaskManager.createSubTask(new SubTask("sub 2","desc", "DONE", epic1.getUid()));
+        ArrayList<SubTask> list = inMemoryTaskManager.getListOfEpicSubTasks(epic1.getUid());
+        boolean isEqual1 = list.get(list.indexOf(subTask1)).getEpicId() == subTask1.getEpicId();
+        boolean isEqual2 = list.get(list.indexOf(subTask2)).getEpicId() == subTask2.getEpicId();
+        assertTrue(isEqual1, "should be equals");
+        assertTrue(isEqual2, "should be equals");
     }
 
+    @DisplayName("should return not empty tasksViewHistory if get method was called")
     @Test
     void getHistory() {
+        InMemoryTaskManager inMemoryTaskManager = new InMemoryTaskManager(new InMemoryHistoryManager());
+        Epic epic1 = inMemoryTaskManager.createEpic(new Epic("Epic 1"));
+        SubTask subTask1 = inMemoryTaskManager.createSubTask(new SubTask("sub 1","desc", "DONE", epic1.getUid()));
+        Epic epicExpected = inMemoryTaskManager.getEpicById(epic1.getUid());
+        SubTask subTaskExpected = inMemoryTaskManager.getSubTaskById(subTask1.getUid());
+        int tasksViewHistorySize = inMemoryTaskManager.getHistory().size();
+
+        assertNotNull(subTaskExpected);
+        assertEquals(tasksViewHistorySize, 2,  "size should not be empty");
     }
 }

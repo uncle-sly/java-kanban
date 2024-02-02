@@ -19,6 +19,7 @@ class InMemoryHistoryManagerTest {
         assertNotEquals(listSize, 0, "TasksViewHistory should be not Empty");
     }
 
+    @DisplayName("TasksViewHistory should have 10 objects always")
     @Test
     void shouldBe10ElementSizeTasksViewHistory() {
         Task task = new Task();
