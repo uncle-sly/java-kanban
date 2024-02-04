@@ -1,19 +1,21 @@
 package ru.yandex.app.service;
 
 import ru.yandex.app.model.Epic;
+import ru.yandex.app.model.Status;
 import ru.yandex.app.model.SubTask;
 import ru.yandex.app.model.Task;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class InMemoryTaskManager implements TaskManager {
 
     private int seq = 0;
-    private final HashMap<Integer, Task> tasks;
-    private final HashMap<Integer, Epic> epics;
-    private final HashMap<Integer, SubTask> subTasks;
+    private final Map<Integer, Task> tasks;
+    private final Map<Integer, Epic> epics;
+    private final Map<Integer, SubTask> subTasks;
     private final HistoryManager tasksViewHistory;
 
 
@@ -26,7 +28,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     // Tasks
     @Override
-    public ArrayList<Task> getAllTasks() {
+    public List<Task> getAllTasks() {
         return new ArrayList<>(tasks.values());
     }
 
@@ -37,10 +39,11 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public Task getTaskById(int id) {
-        if (tasks.get(id) != null) {
-            tasksViewHistory.addInTasksViewHistory(tasks.get(id));
+        final Task task = tasks.get(id);
+        if (task != null) {
+            tasksViewHistory.addInTasksViewHistory(task);
         }
-        return tasks.get(id);
+        return task;
     }
 
     @Override
@@ -66,7 +69,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     //SubTasks
     @Override
-    public ArrayList<SubTask> getAllSubTasks() {
+    public List<SubTask> getAllSubTasks() {
         return new ArrayList<>(subTasks.values());
     }
 
@@ -81,10 +84,12 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public SubTask getSubTaskById(int id) {
-        if (subTasks.get(id) != null) {
-            tasksViewHistory.addInTasksViewHistory(subTasks.get(id));
+        final SubTask subTask = subTasks.get(id);
+
+        if (subTask != null) {
+            tasksViewHistory.addInTasksViewHistory(subTask);
         }
-        return subTasks.get(id);
+        return subTask;
     }
 
     @Override
@@ -121,7 +126,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     //Epics
     @Override
-    public ArrayList<Epic> getAllEpics() {
+    public List<Epic> getAllEpics() {
         return new ArrayList<>(epics.values());
     }
 
@@ -133,10 +138,12 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public Epic getEpicById(int id) {
-        if (epics.get(id) != null) {
-            tasksViewHistory.addInTasksViewHistory(epics.get(id));
+        final Epic epic = epics.get(id);
+
+        if (epic != null) {
+            tasksViewHistory.addInTasksViewHistory(epic);
         }
-        return epics.get(id);
+        return epic;
     }
 
     @Override
@@ -163,9 +170,9 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public ArrayList<SubTask> getListOfEpicSubTasks(int id) {
-        ArrayList<Integer> epicSubTasksUids = epics.get(id).getSubTasksUids();
-        ArrayList<SubTask> epicSubTasks = new ArrayList<>();
+    public List<SubTask> getListOfEpicSubTasks(int id) {
+        List<Integer> epicSubTasksUids = epics.get(id).getSubTasksUids();
+        List<SubTask> epicSubTasks = new ArrayList<>();
 
         for (Integer epicSubTasksUid : epicSubTasksUids) {
             epicSubTasks.add(subTasks.get(epicSubTasksUid));
@@ -185,20 +192,20 @@ public class InMemoryTaskManager implements TaskManager {
 
     private void calculateStatus(int id) {
         Epic existedEpic = epics.get(id);
-        ArrayList<Integer> epicSubTasksUids = existedEpic.getSubTasksUids();
+        List<Integer> epicSubTasksUids = existedEpic.getSubTasksUids();
         int newSubtasksCounter = 0;
         int doneSubtasksCounter = 0;
         String epicStatus;
         if (subTasks.isEmpty()) {
-            existedEpic.setStatus("NEW");
+            existedEpic.setStatus(Status.NEW);
         } else {
             for (Integer epicSubTasksUid : epicSubTasksUids) {
-                final String status = subTasks.get(epicSubTasksUid).getStatus();
+                final Status status = subTasks.get(epicSubTasksUid).getStatus();
 
-                if (status.equals("NEW")) {
+                if (status.equals(Status.NEW)) {
                     newSubtasksCounter++;
-                } else if (status.equals("IN_PROGRESS")) {
-                    existedEpic.setStatus("IN_PROGRESS");
+                } else if (status.equals(Status.IN_PROGRESS)) {
+                    existedEpic.setStatus(Status.IN_PROGRESS);
                     return;
                 } else {
                     doneSubtasksCounter++;
@@ -212,7 +219,7 @@ public class InMemoryTaskManager implements TaskManager {
             } else {
                 epicStatus = "IN_PROGRESS";
             }
-            existedEpic.setStatus(epicStatus);
+            existedEpic.setStatus(Status.valueOf(epicStatus));
         }
     }
 

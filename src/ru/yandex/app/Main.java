@@ -1,6 +1,7 @@
 package ru.yandex.app;
 
 import ru.yandex.app.model.Epic;
+import ru.yandex.app.model.Status;
 import ru.yandex.app.model.SubTask;
 import ru.yandex.app.model.Task;
 import ru.yandex.app.service.*;
@@ -13,31 +14,32 @@ public class Main {
     public static void main(String[] args) {
        // InMemoryTaskManager inMemoryTaskManager = new InMemoryTaskManager();
         TaskManager taskManager = Managers.getDefaultTaskManager();
+
 //      ---Tasks---
-        Task task1 = taskManager.createTask(new Task("New Task 1", "", "NEW"));
+        Task task1 = taskManager.createTask(new Task("New Task 1", "", Status.NEW));
         System.out.println("Created task: " + task1);
-        Task task2 = taskManager.createTask(new Task("New Task 2", "", "NEW"));
+        Task task2 = taskManager.createTask(new Task("New Task 2", "", Status.NEW));
         System.out.println("Created task: " + task2);
 
-        Task task3 = taskManager.createTask(new Task("New Task 3", "", "NEW"));
+        Task task3 = taskManager.createTask(new Task("New Task 3", "", Status.NEW));
         Task taskFromManager3 = taskManager.getTaskById(task3.getUid());
 
-        Task task4 = taskManager.createTask(new Task("New Task 4", "", "NEW"));
+        Task task4 = taskManager.createTask(new Task("New Task 4", "", Status.NEW));
         Task taskFromManager4 = taskManager.getTaskById(task4.getUid());
 
-        Task task5 = taskManager.createTask(new Task("New Task 5", "", "NEW"));
+        Task task5 = taskManager.createTask(new Task("New Task 5", "", Status.NEW));
         Task taskFromManager5 = taskManager.getTaskById(task5.getUid());
 
-        Task task6 = taskManager.createTask(new Task("New Task 6", "", "NEW"));
+        Task task6 = taskManager.createTask(new Task("New Task 6", "", Status.NEW));
         Task taskFromManager6 = taskManager.getTaskById(task6.getUid());
 
-        Task task7 = taskManager.createTask(new Task("New Task 7", "", "NEW"));
+        Task task7 = taskManager.createTask(new Task("New Task 7", "", Status.NEW));
         Task taskFromManager7 = taskManager.getTaskById(task7.getUid());
-        Task task8 = taskManager.createTask(new Task("New Task 8", "", "NEW"));
+        Task task8 = taskManager.createTask(new Task("New Task 8", "", Status.NEW));
         Task taskFromManager8 = taskManager.getTaskById(task8.getUid());
-        Task task9 = taskManager.createTask(new Task("New Task 9", "", "NEW"));
+        Task task9 = taskManager.createTask(new Task("New Task 9", "", Status.NEW));
         Task taskFromManager9 = taskManager.getTaskById(task9.getUid());
-        Task task10 = taskManager.createTask(new Task("New Task 10", "", "NEW"));
+        Task task10 = taskManager.createTask(new Task("New Task 10", "", Status.NEW));
         Task taskFromManager10 = taskManager.getTaskById(task10.getUid());
 
         Task taskFromManager1 = taskManager.getTaskById(task1.getUid());
@@ -49,7 +51,7 @@ public class Main {
 
         taskFromManager1.setName("DEV Task 1");
         taskFromManager1.setDescription("Solo Task");
-        taskFromManager1.setStatus("IN_PROGRESS");
+        taskFromManager1.setStatus(Status.IN_PROGRESS);
         taskManager.updateTask(taskFromManager1);
         taskFromManager1 = taskManager.getTaskById(task1.getUid());
         System.out.println("\nUpdated task: " + taskFromManager1);

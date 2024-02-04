@@ -2,37 +2,27 @@ package ru.yandex.app.service;
 
 import ru.yandex.app.model.Task;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
 public class InMemoryHistoryManager implements HistoryManager {
 
     private final LinkedList<Task> tasksViewHistory = new LinkedList<>();
+    private static final int HISTORY_CAPACITY = 10;
 
     @Override
     public void addInTasksViewHistory(Task task) {
-        int listSize = tasksViewHistory.size();
-        int capacity = 10;
+        int historySize = tasksViewHistory.size();
 
-/*        if (listSize<10) {
-            tasksViewHistory.addLast(task);
-        } else {
-            for (int i = 0; i < listSize-2; i++) {
-                tasksViewHistory.add(tasksViewHistory.get(i + 1));
-                if (i==listSize-2) {tasksViewHistory.set(i,task);}
-            }
-        }*/
-        if (listSize == capacity) {
+        if (historySize == HISTORY_CAPACITY) {
             tasksViewHistory.removeFirst();
-            tasksViewHistory.add(task);
-        } else {
-            tasksViewHistory.add(task);
         }
-
+        tasksViewHistory.add(task);
     }
 
     @Override
     public List<Task> getHistory() {
-        return tasksViewHistory;
+        return  new ArrayList<>(tasksViewHistory);
     }
 }
