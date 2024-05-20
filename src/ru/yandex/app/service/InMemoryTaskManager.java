@@ -16,14 +16,14 @@ public class InMemoryTaskManager implements TaskManager {
     private final Map<Integer, Task> tasks;
     private final Map<Integer, Epic> epics;
     private final Map<Integer, SubTask> subTasks;
-    private final HistoryManager tasksViewHistory;
+    private final HistoryManager history;
 
 
-    public InMemoryTaskManager(HistoryManager tasksViewHistory) {
+    public InMemoryTaskManager(HistoryManager history) {
         this.tasks = new HashMap<>();
         this.epics = new HashMap<>();
         this.subTasks = new HashMap<>();
-        this.tasksViewHistory = tasksViewHistory;
+        this.history = history;
     }
 
     // Tasks
@@ -41,7 +41,7 @@ public class InMemoryTaskManager implements TaskManager {
     public Task getTaskById(int id) {
         final Task task = tasks.get(id);
         if (task != null) {
-            tasksViewHistory.addInTasksViewHistory(task);
+            history.add(task);
         }
         return task;
     }
@@ -65,6 +65,7 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void delTaskById(int id) {
         tasks.remove(id);
+        history.remove(id);
     }
 
     //SubTasks
@@ -87,7 +88,7 @@ public class InMemoryTaskManager implements TaskManager {
         final SubTask subTask = subTasks.get(id);
 
         if (subTask != null) {
-            tasksViewHistory.addInTasksViewHistory(subTask);
+            history.add(subTask);
         }
         return subTask;
     }
@@ -141,7 +142,7 @@ public class InMemoryTaskManager implements TaskManager {
         final Epic epic = epics.get(id);
 
         if (epic != null) {
-            tasksViewHistory.addInTasksViewHistory(epic);
+            history.add(epic);
         }
         return epic;
     }
@@ -182,7 +183,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public List<Task> getHistory() {
-        return tasksViewHistory.getHistory();
+        return history.getAll();
     }
 
 
