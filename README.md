@@ -1,3 +1,5 @@
-# Sprint 4,5
+Yandex Practicum
+
 ## java-kanban
+
 Repository for homework project.
