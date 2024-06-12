@@ -103,6 +103,46 @@ class InMemoryHistoryManagerTest {
         assertEquals(manager.getAll(), List.of(task1, task4), "should be task 1 and 4");
     }
 
+    @DisplayName("delete 1 task and check 3 element goes after 1")
+    @Test
+    void testRemovedNodeCheckSequence() {
+        InMemoryHistoryManager manager = new InMemoryHistoryManager();
+        Task task1 = new Task("Task 1");
+        task1.setUid(1);
+        manager.add(task1);
+        Task task2 = new Task("Task 2");
+        task2.setUid(2);
+        manager.add(task2);
+        Task task3 = new Task("Task 3");
+        task3.setUid(3);
+        manager.add(task3);
+
+        manager.remove(task2.getUid());
+
+        assertEquals(manager.getAll().get(0), task1, "First element should be Task1");
+        assertEquals(manager.getAll().get(1), task3, "Third element should be Task3");
+    }
+
+    @DisplayName("delete 1 task and check that we can't get him")
+    @Test
+    void testCantGetRemovedNode() {
+        InMemoryHistoryManager manager = new InMemoryHistoryManager();
+
+        Task task1 = new Task("Task 1");
+        task1.setUid(1);
+        manager.add(task1);
+        Task task2 = new Task("Task 2");
+        task2.setUid(2);
+        manager.add(task2);
+        Task task3 = new Task("Task 3");
+        task3.setUid(3);
+        manager.add(task3);
+
+        manager.remove(task3.getUid());
+        assertFalse(manager.getAll().contains(task3));
+    }
+
+    /*
     @DisplayName("delete 1 task and check prev and next links should be null")
     @Test
     void testRemovedNodePrevNext() {
@@ -145,6 +185,6 @@ class InMemoryHistoryManagerTest {
 
         assertEquals(nNode.prev, manager.history.get(task1.getUid()), "should be equals");
     }
-
+ */
 
 }
