@@ -2,11 +2,10 @@ package ru.yandex.app;
 
 import ru.yandex.app.model.Epic;
 import ru.yandex.app.model.Status;
-import ru.yandex.app.model.SubTask;
 import ru.yandex.app.model.Task;
-import ru.yandex.app.service.*;
+import ru.yandex.app.service.Managers;
+import ru.yandex.app.service.TaskManager;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class Main {
@@ -41,6 +40,11 @@ public class Main {
         Task taskFromManager9 = taskManager.getTaskById(task9.getUid());
         Task task10 = taskManager.createTask(new Task("New Task 10", "", Status.NEW));
         Task taskFromManager10 = taskManager.getTaskById(task10.getUid());
+        Task task11 = taskManager.createTask(new Task("New Task 11", "", Status.NEW));
+        Task taskFromManager11 = taskManager.getTaskById(task11.getUid());
+        Task task12 = taskManager.createTask(new Task("New Task 12", "", Status.NEW));
+        Task taskFromManager12 = taskManager.getTaskById(task12.getUid());
+
 
         Task taskFromManager1 = taskManager.getTaskById(task1.getUid());
         System.out.println("\nGet task by ID: " + taskFromManager1);
@@ -79,6 +83,9 @@ public class Main {
 
         Epic epicFromManager1 = taskManager.getEpicById(epic1.getUid());
         System.out.println("\nGet Epic by ID: " + epicFromManager1);
+
+        taskFromManager10 = taskManager.getTaskById(task10.getUid());
+        taskFromManager3 = taskManager.getTaskById(task3.getUid());
 
         System.out.println("\nViews History: " + taskManager.getHistory());
 

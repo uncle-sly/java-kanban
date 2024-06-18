@@ -72,7 +72,7 @@ public class Task {
         return "\nTask{" +
                "id=" + uid +
                ", name='" + name + '\'' +
-               ", status='" + status+ '\'' +
+                ", status='" + status + '\'' +
                ", description='" + description + '\'' +
                "}\n";
     }
