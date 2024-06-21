@@ -2,6 +2,7 @@ package ru.yandex.app;
 
 import ru.yandex.app.model.Epic;
 import ru.yandex.app.model.Status;
+import ru.yandex.app.model.SubTask;
 import ru.yandex.app.model.Task;
 import ru.yandex.app.service.Managers;
 import ru.yandex.app.service.TaskManager;
@@ -19,10 +20,9 @@ public class Main {
         System.out.println("Created task: " + task1);
         Task task2 = taskManager.createTask(new Task("New Task 2", "", Status.NEW));
         System.out.println("Created task: " + task2);
-
         Task task3 = taskManager.createTask(new Task("New Task 3", "", Status.NEW));
         Task taskFromManager3 = taskManager.getTaskById(task3.getUid());
-
+/*
         Task task4 = taskManager.createTask(new Task("New Task 4", "", Status.NEW));
         Task taskFromManager4 = taskManager.getTaskById(task4.getUid());
 
@@ -44,7 +44,7 @@ public class Main {
         Task taskFromManager11 = taskManager.getTaskById(task11.getUid());
         Task task12 = taskManager.createTask(new Task("New Task 12", "", Status.NEW));
         Task taskFromManager12 = taskManager.getTaskById(task12.getUid());
-
+*/
 
         Task taskFromManager1 = taskManager.getTaskById(task1.getUid());
         System.out.println("\nGet task by ID: " + taskFromManager1);
@@ -60,10 +60,10 @@ public class Main {
         taskFromManager1 = taskManager.getTaskById(task1.getUid());
         System.out.println("\nUpdated task: " + taskFromManager1);
 
-        taskManager.delTaskById(taskFromManager1.getUid());
-        System.out.println("\nDeleted task: " + taskFromManager1);
-        taskFromManager1 = taskManager.getTaskById(task1.getUid());
-        System.out.println("Get task by ID: " + taskFromManager1);
+//        taskManager.delTaskById(taskFromManager1.getUid());
+//        System.out.println("\nDeleted task: " + taskFromManager1);
+//        taskFromManager1 = taskManager.getTaskById(task1.getUid());
+//        System.out.println("Get task by ID: " + taskFromManager1);
 //        Get All Tasks
         List<Task> allTasks = taskManager.getAllTasks();
         System.out.println("\nAll Tasks : " + allTasks);
@@ -84,21 +84,21 @@ public class Main {
         Epic epicFromManager1 = taskManager.getEpicById(epic1.getUid());
         System.out.println("\nGet Epic by ID: " + epicFromManager1);
 
-        taskFromManager10 = taskManager.getTaskById(task10.getUid());
-        taskFromManager3 = taskManager.getTaskById(task3.getUid());
+        //   taskFromManager10 = taskManager.getTaskById(task10.getUid());
+        //   taskFromManager3 = taskManager.getTaskById(task3.getUid());
 
-        System.out.println("\nViews History: " + taskManager.getHistory());
+        //   System.out.println("\nViews History: " + taskManager.getHistory());
 
 ////        Get all Epics
 //        List<Epic> allEpics = inMemoryTaskManager.getAllEpics();
 //        System.out.println("\nAll Epics: " + allEpics);
 //        //        Create SubTask
-//        SubTask subTask1 = inMemoryTaskManager.createSubTask(new SubTask("New SubTask 1", "department 1", "NEW", epic1.getUid()));
-//        System.out.println("\nCreated SubTask: " + subTask1);
-//        SubTask subTask2 = inMemoryTaskManager.createSubTask(new SubTask("New SubTask 2", "department 2", "NEW", epic1.getUid()));
-//        System.out.println("Created SubTask: " + subTask2);
-//        SubTask subTask3 = inMemoryTaskManager.createSubTask(new SubTask("New SubTask 3", "department 3", "NEW", epic2.getUid()));
-//        System.out.println("Created SubTask: " + subTask3);
+        SubTask subTask1 = taskManager.createSubTask(new SubTask("New SubTask 1", "department 1", Status.NEW, epic1.getUid()));
+        System.out.println("\nCreated SubTask: " + subTask1);
+        SubTask subTask2 = taskManager.createSubTask(new SubTask("New SubTask 2", "department 2", Status.NEW, epic1.getUid()));
+        System.out.println("Created SubTask: " + subTask2);
+        SubTask subTask3 = taskManager.createSubTask(new SubTask("New SubTask 3", "department 3", Status.NEW, epic2.getUid()));
+        System.out.println("Created SubTask: " + subTask3);
 //        //        Get list of Epic's Subtasks
 //        ArrayList<SubTask> listOfEpicSubTasks = inMemoryTaskManager.getListOfEpicSubTasks(epic1.getUid());
 //        System.out.println("\nList of Epic SubTasks: " + listOfEpicSubTasks);
@@ -148,5 +148,7 @@ public class Main {
 ////      Get SubTask by ID
 //        SubTask subTaskFromManager1 = taskManager.getSubTaskById(subTask1.getUid());
 //        System.out.println("Get SubTask by ID: " + subTaskFromManager1);
+
+
     }
 }

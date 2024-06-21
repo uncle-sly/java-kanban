@@ -20,6 +20,10 @@ public class Task {
     public Task() {
     }
 
+    public Integer getEpicId() {
+        return null;
+    }
+
     public int getUid() {
         return uid;
     }
@@ -50,6 +54,10 @@ public class Task {
 
     public void setStatus(Status status) {
         this.status = status;
+    }
+
+    public TaskType getType() {
+        return TaskType.TASK;
     }
 
     @Override

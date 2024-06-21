@@ -142,49 +142,4 @@ class InMemoryHistoryManagerTest {
         assertFalse(manager.getAll().contains(task3));
     }
 
-    /*
-    @DisplayName("delete 1 task and check prev and next links should be null")
-    @Test
-    void testRemovedNodePrevNext() {
-        InMemoryHistoryManager manager = new InMemoryHistoryManager();
-
-        Task task1 = new Task("Task 1");
-        task1.setUid(1);
-        manager.add(task1);
-        Task task2 = new Task("Task 2");
-        task2.setUid(2);
-        manager.add(task2);
-        Task task3 = new Task("Task 3");
-        task3.setUid(3);
-        manager.add(task3);
-
-        InMemoryHistoryManager.Node nDel = manager.history.get(task2.getUid());
-        manager.remove(task2.getUid());
-
-        assertNull(nDel.prev);
-        assertNull(nDel.next);
-    }
-
-    @DisplayName("delete 1 task and check correct prev link")
-    @Test
-    void testCorrectPrevLink() {
-        InMemoryHistoryManager manager = new InMemoryHistoryManager();
-
-        Task task1 = new Task("Task 1");
-        task1.setUid(1);
-        manager.add(task1);
-        Task task2 = new Task("Task 2");
-        task2.setUid(2);
-        manager.add(task2);
-        Task task3 = new Task("Task 3");
-        task3.setUid(3);
-        manager.add(task3);
-
-        manager.remove(task2.getUid());
-        InMemoryHistoryManager.Node nNode = manager.history.get(task3.getUid());
-
-        assertEquals(nNode.prev, manager.history.get(task1.getUid()), "should be equals");
-    }
- */
-
 }
