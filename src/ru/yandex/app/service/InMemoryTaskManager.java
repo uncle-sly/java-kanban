@@ -107,8 +107,7 @@ public class InMemoryTaskManager implements TaskManager {
         int epicId = subTask.getEpicId();
         Epic currentEpic = epics.get(epicId);
         if (currentEpic == null) {
-            throw new NotFoundException("Can't get Epic: " + epicId + "Not found.");
-            //    return null;
+            throw new NotFoundException("Can't get Epic: " + epicId + " Not found.");
         }
         subTask.setUid(genId());
         subTasks.put(subTask.getUid(), subTask);
@@ -240,5 +239,4 @@ public class InMemoryTaskManager implements TaskManager {
             existedEpic.setStatus(Status.valueOf(epicStatus));
         }
     }
-
 }
