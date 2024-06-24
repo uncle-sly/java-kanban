@@ -6,7 +6,7 @@ public class Managers {
         return new FileBackedTaskManager(getDefaultHistory());
     }
 
-    public static TaskManager MemoryTaskManager() {
+    public static TaskManager memoryTaskManager() {
         return new InMemoryTaskManager(getDefaultHistory());
     }
 
