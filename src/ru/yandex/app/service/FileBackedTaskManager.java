@@ -14,6 +14,7 @@ import static ru.yandex.app.converter.TaskToStringConverter.taskToString;
 public class FileBackedTaskManager extends InMemoryTaskManager {
 
     public static final String FILE_CSV = "resources/file_tasks.csv";
+    private static final String FILE_HEADER = "id,type,name,status,description,epic";
     private final File file;
 
     public FileBackedTaskManager(HistoryManager history) {
@@ -38,6 +39,11 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
 
     @Override
+    public void delAllTasks() {
+        super.delAllTasks();
+    }
+
+    @Override
     public Task getTaskById(int id) {
         return super.getTaskById(id);
     }
@@ -55,7 +61,27 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         save();
     }
 
+    @Override
+    public void delTaskById(int id) {
+        super.delTaskById(id);
+    }
+
     //SubTasks
+    @Override
+    public List<SubTask> getAllSubTasks() {
+        return super.getAllSubTasks();
+    }
+
+    @Override
+    public void delAllSubTasks() {
+        super.delAllSubTasks();
+    }
+
+    @Override
+    public SubTask getSubTaskById(int id) {
+        return super.getSubTaskById(id);
+    }
+
     @Override
     public SubTask createSubTask(SubTask subTask) {
         SubTask newSubTask = super.createSubTask(subTask);
@@ -69,7 +95,27 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         save();
     }
 
+    @Override
+    public void delSubTaskById(int id) {
+        super.delSubTaskById(id);
+    }
+
     //Epics
+    @Override
+    public List<Epic> getAllEpics() {
+        return super.getAllEpics();
+    }
+
+    @Override
+    public void delAllEpics() {
+        super.delAllEpics();
+    }
+
+    @Override
+    public Epic getEpicById(int id) {
+        return super.getEpicById(id);
+    }
+
     @Override
     public Epic createEpic(Epic epic) {
         Epic newEpic = super.createEpic(epic);
@@ -81,6 +127,16 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     public void updateEpic(Epic epic) {
         super.updateEpic(epic);
         save();
+    }
+
+    @Override
+    public void delEpicById(int id) {
+        super.delEpicById(id);
+    }
+
+    @Override
+    public List<SubTask> getListOfEpicSubTasks(int id) {
+        return super.getListOfEpicSubTasks(id);
     }
 
     private Task fromString(String value) {
@@ -113,8 +169,9 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
     private void save() {
 
+
         try (final BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
-            writer.write("id,type,name,status,description,epic");
+            writer.write(FILE_HEADER);
             writer.newLine();
 
             for (Map.Entry<Integer, Task> entry : tasks.entrySet()) {
@@ -147,14 +204,19 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                     break;
                 }
                 final Task task = fromString(line);
-
                 final int uid = task.getUid();
-                if (task.getType() == TaskType.TASK) {
-                    tasks.put(uid, task);
-                } else if (task.getType() == TaskType.EPIC) {
-                    epics.put(uid, (Epic) task);
-                } else {
-                    subTasks.put(uid, (SubTask) task);
+                TaskType type = task.getType();
+
+                switch (type) {
+                    case TASK:
+                        tasks.put(uid, task);
+                        break;
+                    case EPIC:
+                        epics.put(uid, (Epic) task);
+                        break;
+                    case SUBTASK:
+                        subTasks.put(uid, (SubTask) task);
+                        break;
                 }
 
                 if (maxUid < uid) {
