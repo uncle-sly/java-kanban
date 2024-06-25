@@ -1,5 +1,6 @@
 package ru.yandex.app.service;
 
+import ru.yandex.app.exceptions.NotFoundException;
 import ru.yandex.app.model.Epic;
 import ru.yandex.app.model.Status;
 import ru.yandex.app.model.SubTask;
@@ -12,10 +13,10 @@ import java.util.Map;
 
 public class InMemoryTaskManager implements TaskManager {
 
-    private int seq = 0;
-    private final Map<Integer, Task> tasks;
-    private final Map<Integer, Epic> epics;
-    private final Map<Integer, SubTask> subTasks;
+    protected int seq = 0;
+    protected final Map<Integer, Task> tasks;
+    protected final Map<Integer, Epic> epics;
+    protected final Map<Integer, SubTask> subTasks;
     private final HistoryManager history;
 
 
@@ -59,7 +60,9 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void updateTask(Task task) {
         Task currentTask = tasks.get(task.getUid());
-        if (currentTask == null) return;
+        if (currentTask == null) {
+            throw new NotFoundException("Can't get Task: " + task.getUid() + "Not found.");
+        }
         currentTask.setName(task.getName());
         currentTask.setStatus(task.getStatus());
         currentTask.setDescription(task.getDescription());
@@ -104,7 +107,7 @@ public class InMemoryTaskManager implements TaskManager {
         int epicId = subTask.getEpicId();
         Epic currentEpic = epics.get(epicId);
         if (currentEpic == null) {
-            return null;
+            throw new NotFoundException("Can't get Epic: " + epicId + " Not found.");
         }
         subTask.setUid(genId());
         subTasks.put(subTask.getUid(), subTask);
@@ -167,7 +170,9 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void updateEpic(Epic epic) {
         Epic currentEpic = epics.get(epic.getUid());
-        if (currentEpic == null) return;
+        if (currentEpic == null) {
+            throw new NotFoundException("Can't get Epic: " + epic.getUid() + "Not found.");
+        }
         currentEpic.setName(epic.getName());
         currentEpic.setDescription(epic.getDescription());
     }
@@ -234,5 +239,4 @@ public class InMemoryTaskManager implements TaskManager {
             existedEpic.setStatus(Status.valueOf(epicStatus));
         }
     }
-
 }

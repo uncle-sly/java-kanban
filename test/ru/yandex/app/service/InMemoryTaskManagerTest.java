@@ -2,6 +2,7 @@ package ru.yandex.app.service;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import ru.yandex.app.exceptions.NotFoundException;
 import ru.yandex.app.model.Epic;
 import ru.yandex.app.model.Status;
 import ru.yandex.app.model.SubTask;
@@ -95,9 +96,16 @@ class InMemoryTaskManagerTest {
     @Test
     void createSubTaskWithEmptyEpic() {
         InMemoryTaskManager inMemoryTaskManager = new InMemoryTaskManager(new InMemoryHistoryManager());
-        SubTask subTask1 = inMemoryTaskManager.createSubTask(new SubTask("sub 1","desc", Status.DONE, 2));
-        assertNull(subTask1);
+
+        NotFoundException thrown = assertThrows(NotFoundException.class, () ->
+                {
+                    SubTask subTask1 = inMemoryTaskManager.createSubTask(new SubTask("sub 1", "desc", Status.DONE, 2));
+                }
+        );
+
+        assertEquals("Can't get Epic: 2 Not found.", thrown.getMessage());
     }
+
     @DisplayName("Should be the same SubTask ID")
     @Test
     void updateSubTask() {
