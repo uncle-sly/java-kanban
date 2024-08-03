@@ -4,6 +4,8 @@ import ru.yandex.app.exceptions.ManagerSaveException;
 import ru.yandex.app.model.*;
 
 import java.io.*;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -14,7 +16,7 @@ import static ru.yandex.app.converter.TaskToStringConverter.taskToString;
 public class FileBackedTaskManager extends InMemoryTaskManager {
 
     public static final String FILE_CSV = "resources/file_tasks.csv";
-    private static final String FILE_HEADER = "id,type,name,status,description,epic";
+    private static final String FILE_HEADER = "id,type,name,status,description,epic,duration,startTime";
     private final File file;
 
     public FileBackedTaskManager(HistoryManager history) {
@@ -139,6 +141,11 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         return super.getListOfEpicSubTasks(id);
     }
 
+    @Override
+    public List<Task> getPrioritised() {
+        return super.getPrioritised();
+    }
+
     private Task fromString(String value) {
         final String[] columns = value.split(",");
         int uid = Integer.parseInt(columns[0]);
@@ -147,16 +154,22 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         String status = columns[3];
         String description = columns[4];
         String epicId = columns[5];
+        Duration duration = Duration.parse(columns[6]);
+
+        LocalDateTime startTime = LocalDateTime.MIN;
+        if (!columns[7].equals("null")) {
+            startTime = LocalDateTime.parse(columns[7]);
+        }
 
         Task task = null;
 
         switch (type) {
             case TASK:
-                task = new Task(name, description, Status.valueOf(status));
+                task = new Task(name, description, Status.valueOf(status), duration, startTime);
                 task.setUid(uid);
                 break;
             case SUBTASK:
-                task = new SubTask(name, description, Status.valueOf(status), Integer.parseInt(epicId));
+                task = new SubTask(name, description, Status.valueOf(status), duration, startTime, Integer.parseInt(epicId));
                 task.setUid(uid);
                 break;
             case EPIC:
@@ -210,12 +223,14 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                 switch (type) {
                     case TASK:
                         tasks.put(uid, task);
+                        prioritisedTasks.add(task);
                         break;
                     case EPIC:
                         epics.put(uid, (Epic) task);
                         break;
                     case SUBTASK:
                         subTasks.put(uid, (SubTask) task);
+                        prioritisedTasks.add(task);
                         break;
                 }
 
@@ -228,6 +243,11 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
             throw new ManagerSaveException(e.getMessage());
         }
         seq = maxUid;
+
+        for (Epic epic : epics.values()) {
+            calculateStatus(epic.getUid());
+        }
+
     }
 
     public static FileBackedTaskManager loadFromFile(File file) {
