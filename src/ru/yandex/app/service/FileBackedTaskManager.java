@@ -157,7 +157,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         Duration duration = Duration.parse(columns[6]);
 
         LocalDateTime startTime = LocalDateTime.MIN;
-        if (!columns[7].equals("null")) {
+        if (!"null".equals(columns[7])) {
             startTime = LocalDateTime.parse(columns[7]);
         }
 

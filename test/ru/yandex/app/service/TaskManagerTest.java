@@ -275,6 +275,56 @@ public abstract class TaskManagerTest<T extends TaskManager> {
         assertEquals(epic1.getEndTime(), LocalDateTime.parse("2024-01-01T15:30"));
     }
 
+    @DisplayName("проверяем, что происходит перерасчет времени оконания Epic после удаления SubTask")
+    @Test
+    void epicEndTimeRecalculatedAfterSubTaskIsDeleted() {
+        Epic epic1 = taskManager.createEpic(new Epic("Epic 100"));
+        SubTask sub1 = taskManager.createSubTask(new SubTask("sub 1", "desc", Status.DONE,
+                Duration.of(10, ChronoUnit.MINUTES), LocalDateTime.parse("2024-01-01T10:00"), epic1.getUid()));
+        SubTask sub2 = taskManager.createSubTask(new SubTask("sub 2", "desc", Status.IN_PROGRESS,
+                Duration.of(20, ChronoUnit.MINUTES), LocalDateTime.parse("2024-01-01T15:00"), epic1.getUid()));
+        SubTask sub3 = taskManager.createSubTask(new SubTask("sub 3", "desc", Status.DONE,
+                Duration.of(30, ChronoUnit.MINUTES), LocalDateTime.parse("2024-01-01T20:00"), epic1.getUid()));
+
+//        время окончания epic1 = 20.30 (sub3)
+        assertEquals(epic1.getEndTime(), sub3.getEndTime());
+
+        taskManager.delSubTaskById(sub3.getUid());
+//        время окончания epic1 = 15.20 (sub2)
+        assertEquals(epic1.getEndTime(), sub2.getEndTime());
+
+        taskManager.delSubTaskById(sub2.getUid());
+//        время окончания epic1 = 10.10 (sub1)
+        assertEquals(epic1.getEndTime(), sub1.getEndTime());
+    }
+
+    @DisplayName("проверяем, что происходит перерасчет продолжительности Epic после удаления SubTask")
+    @Test
+    void epicDurationRecalculatedAfterSubTaskIsDeleted() {
+        Epic epic1 = taskManager.createEpic(new Epic("Epic 100"));
+        SubTask sub1 = taskManager.createSubTask(new SubTask("sub 1", "desc", Status.DONE,
+                Duration.of(30, ChronoUnit.MINUTES), LocalDateTime.parse("2024-01-01T10:00"), epic1.getUid()));
+        SubTask sub2 = taskManager.createSubTask(new SubTask("sub 2", "desc", Status.IN_PROGRESS,
+                Duration.of(60, ChronoUnit.MINUTES), LocalDateTime.parse("2024-01-01T15:00"), epic1.getUid()));
+        SubTask sub3 = taskManager.createSubTask(new SubTask("sub 3", "desc", Status.DONE,
+                Duration.of(90, ChronoUnit.MINUTES), LocalDateTime.parse("2024-01-01T20:00"), epic1.getUid()));
+
+//        продолжительность epic1 = 180
+        assertEquals(epic1.getDuration(), Duration.of(180, ChronoUnit.MINUTES));
+
+        taskManager.delSubTaskById(sub3.getUid());
+//        продолжительность epic1 = 90
+        assertEquals(epic1.getDuration(), Duration.of(90, ChronoUnit.MINUTES));
+
+        taskManager.delSubTaskById(sub2.getUid());
+//        продолжительность epic1 = 30
+        assertEquals(epic1.getDuration(), Duration.of(30, ChronoUnit.MINUTES));
+
+        taskManager.delSubTaskById(sub1.getUid());
+//        продолжительность epic1 = 0
+        assertEquals(epic1.getDuration(), Duration.of(0, ChronoUnit.MINUTES));
+    }
+
     @DisplayName("Проверяем граничные ситуации, не должно быть пересечения. Задача добавлена До всех задач, после и между задачами.")
     @Test
     void checkingBoundarySituations() {

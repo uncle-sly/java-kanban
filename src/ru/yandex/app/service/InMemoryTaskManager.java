@@ -283,7 +283,6 @@ public class InMemoryTaskManager implements TaskManager {
                 continue;
             }
 
-//            if ( !(pTask.getStartTime().isAfter(task.getEndTime()) || pTask.getEndTime().isBefore(task.getStartTime())) )
             if ((task.getStartTime().isAfter(pTask.getStartTime()) && task.getStartTime().isBefore(pTask.getEndTime()))
                     || task.getEndTime().isAfter(pTask.getStartTime()) && task.getEndTime().isBefore(pTask.getEndTime())) {
                 throw new ValidationException("Есть пересечение с: " + pTask.getName() + ", ID: " + pTask.getUid());
