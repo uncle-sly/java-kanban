@@ -7,6 +7,9 @@ import ru.yandex.app.model.Task;
 import ru.yandex.app.service.Managers;
 import ru.yandex.app.service.TaskManager;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 public class Main {
@@ -16,11 +19,11 @@ public class Main {
         TaskManager taskManager = Managers.getDefaultTaskManager();
 
 //      ---Tasks---
-        Task task1 = taskManager.createTask(new Task("New Task 1", "", Status.NEW));
+        Task task1 = taskManager.createTask(new Task("New Task 1", "", Status.NEW, Duration.of(10, ChronoUnit.MINUTES), LocalDateTime.parse("2020-01-01T10:00")));
         System.out.println("Created task: " + task1);
-        Task task2 = taskManager.createTask(new Task("New Task 2", "", Status.NEW));
+        Task task2 = taskManager.createTask(new Task("New Task 2", "", Status.NEW, Duration.of(20, ChronoUnit.MINUTES), LocalDateTime.parse("2020-02-01T10:00")));
         System.out.println("Created task: " + task2);
-        Task task3 = taskManager.createTask(new Task("New Task 3", "", Status.NEW));
+        Task task3 = taskManager.createTask(new Task("New Task 3", "", Status.NEW, Duration.of(30, ChronoUnit.MINUTES), LocalDateTime.parse("2020-03-01T10:00")));
         Task taskFromManager3 = taskManager.getTaskById(task3.getUid());
 /*
         Task task4 = taskManager.createTask(new Task("New Task 4", "", Status.NEW));
@@ -93,11 +96,11 @@ public class Main {
 //        List<Epic> allEpics = inMemoryTaskManager.getAllEpics();
 //        System.out.println("\nAll Epics: " + allEpics);
 //        //        Create SubTask
-        SubTask subTask1 = taskManager.createSubTask(new SubTask("New SubTask 1", "department 1", Status.NEW, epic1.getUid()));
+        SubTask subTask1 = taskManager.createSubTask(new SubTask("New SubTask 1", "department 1", Status.NEW, Duration.of(10, ChronoUnit.MINUTES), LocalDateTime.parse("01-01-2020T10:00"), epic1.getUid()));
         System.out.println("\nCreated SubTask: " + subTask1);
-        SubTask subTask2 = taskManager.createSubTask(new SubTask("New SubTask 2", "department 2", Status.NEW, epic1.getUid()));
+        SubTask subTask2 = taskManager.createSubTask(new SubTask("New SubTask 2", "department 2", Status.NEW, Duration.of(20, ChronoUnit.MINUTES), LocalDateTime.parse("01-02-2020T10:00"), epic1.getUid()));
         System.out.println("Created SubTask: " + subTask2);
-        SubTask subTask3 = taskManager.createSubTask(new SubTask("New SubTask 3", "department 3", Status.NEW, epic2.getUid()));
+        SubTask subTask3 = taskManager.createSubTask(new SubTask("New SubTask 3", "department 3", Status.NEW, Duration.of(30, ChronoUnit.MINUTES), LocalDateTime.parse("01-03-2020T10:00"), epic2.getUid()));
         System.out.println("Created SubTask: " + subTask3);
 //        //        Get list of Epic's Subtasks
 //        ArrayList<SubTask> listOfEpicSubTasks = inMemoryTaskManager.getListOfEpicSubTasks(epic1.getUid());

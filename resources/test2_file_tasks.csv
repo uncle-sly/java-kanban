@@ -1,0 +1,6 @@
+id,type,name,status,description,epic,duration,startTime
+1,TASK,New Task 1,NEW,,null,PT10M,2024-01-01T10:00
+2,TASK,New Task 2,NEW,,null,PT15M,2024-01-02T10:00
+3,TASK,New Task 3,NEW,,null,PT20M,2024-01-03T10:00
+4,EPIC,New Epic 1,NEW,null,null,PT20M,2024-01-04T10:00
+5,SUBTASK,New SubTask 1,NEW,department 1,4,PT20M,2024-01-04T10:00

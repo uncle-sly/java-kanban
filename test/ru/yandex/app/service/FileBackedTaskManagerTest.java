@@ -12,29 +12,41 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 @DisplayName("FileBackedTaskManagerTest")
-class FileBackedTaskManagerTest {
+class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskManager> {
     Path path = Paths.get("resources/test1_file_tasks.csv");
+    Path path2 = Paths.get("resources/test2_file_tasks.csv");
+
+    @Override
+    public FileBackedTaskManager createManager() {
+        return new FileBackedTaskManager(new File(String.valueOf(path)));
+    }
 
     @DisplayName("write tasks to file, file should be not Empty")
     @Test
     void writeTasksToFile() {
-        TaskManager taskManager = new FileBackedTaskManager(new File(String.valueOf(path)));
+        TaskManager taskManager = new FileBackedTaskManager(new File(String.valueOf(path2)));
 
-        Task task1 = taskManager.createTask(new Task("New Task 1", "", Status.NEW));
-        Task task2 = taskManager.createTask(new Task("New Task 2", "", Status.NEW));
-        Task task3 = taskManager.createTask(new Task("New Task 3", "", Status.NEW));
+        Task task1 = taskManager.createTask(new Task("New Task 1", "", Status.NEW,
+                Duration.of(10, ChronoUnit.MINUTES), LocalDateTime.parse("2024-01-01T10:00")));
+        Task task2 = taskManager.createTask(new Task("New Task 2", "", Status.NEW,
+                Duration.of(15, ChronoUnit.MINUTES), LocalDateTime.parse("2024-01-02T10:00")));
+        Task task3 = taskManager.createTask(new Task("New Task 3", "", Status.NEW,
+                Duration.of(20, ChronoUnit.MINUTES), LocalDateTime.parse("2024-01-03T10:00")));
         Epic epic1 = taskManager.createEpic(new Epic("New Epic 1"));
-        SubTask subTask1 = taskManager.createSubTask(new SubTask("New SubTask 1", "department 1", Status.NEW, epic1.getUid()));
+        SubTask subTask1 = taskManager.createSubTask(new SubTask("New SubTask 1", "department 1", Status.NEW,
+                Duration.of(20, ChronoUnit.MINUTES), LocalDateTime.parse("2024-01-04T10:00"), epic1.getUid()));
 
-        assertTrue(Files.exists(path));
+        assertTrue(Files.exists(path2));
 
         try {
-            assertTrue(Files.size(path) > 0);
+            assertTrue(Files.size(path2) > 0);
         } catch (IOException e) {
             throw new RuntimeException(e.getMessage());
         }
@@ -46,7 +58,7 @@ class FileBackedTaskManagerTest {
     @DisplayName("read tasks from file_tasks.csv, HashMaps should be not Empty")
     @Test
     void readTasksFromFile() {
-        FileBackedTaskManager taskManager = FileBackedTaskManager.loadFromFile(path.toFile());
+        FileBackedTaskManager taskManager = FileBackedTaskManager.loadFromFile(path2.toFile());
         assertEquals(3, taskManager.tasks.size());
         assertEquals(1, taskManager.epics.size());
         assertEquals(1, taskManager.subTasks.size());
@@ -55,19 +67,15 @@ class FileBackedTaskManagerTest {
     @DisplayName("read uids from file, seq should be equal max uid")
     @Test
     void readUidsFromFile() {
-        FileBackedTaskManager taskManager = new FileBackedTaskManager(new File("resources/test3_file_tasks.csv"));
+        taskManager = FileBackedTaskManager.loadFromFile(path2.toFile());
 
-        Task task1 = taskManager.createTask(new Task("New Task 1", "", Status.NEW));
-        Task task2 = taskManager.createTask(new Task("New Task 2", "", Status.NEW));
-        Task task3 = taskManager.createTask(new Task("New Task 3", "", Status.NEW));
-
-        assertEquals(3, taskManager.seq);
+        assertEquals(5, taskManager.seq);
     }
 
     @DisplayName("reload taskManager from file, should be equal with taskManager")
     @Test
     void reloadTaskManager() {
-        FileBackedTaskManager taskManager = FileBackedTaskManager.loadFromFile(path.toFile());
+        taskManager = FileBackedTaskManager.loadFromFile(path.toFile());
         FileBackedTaskManager reloadTaskManager = FileBackedTaskManager.loadFromFile(path.toFile());
 
         assertEquals(taskManager.getAllTasks(), reloadTaskManager.getAllTasks());
@@ -88,4 +96,12 @@ class FileBackedTaskManagerTest {
         assertTrue(taskManager.getAllSubTasks().isEmpty());
     }
 
+    @DisplayName("проверяем, что после восстановления файлового менеджера восстанавливается prioritisedTasks")
+    @Test
+    void checkingRecoveryPrioritisedTasksAfterFileManagerRecovery() {
+        taskManager = FileBackedTaskManager.loadFromFile(path2.toFile());
+
+        assertNotNull(taskManager.getPrioritised());
+        assertEquals(4, taskManager.getPrioritised().size());
+    }
 }
