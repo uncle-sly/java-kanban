@@ -30,6 +30,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     void init() {
 
         taskManager = createManager();
+
     }
 
 
@@ -364,4 +365,5 @@ public abstract class TaskManagerTest<T extends TaskManager> {
         ));
         assertNotNull(thrown3);
     }
+
 }
