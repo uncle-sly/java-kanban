@@ -25,6 +25,8 @@ public class Main {
         System.out.println("Created task: " + task2);
         Task task3 = taskManager.createTask(new Task("New Task 3", "", Status.NEW, Duration.of(30, ChronoUnit.MINUTES), LocalDateTime.parse("2020-03-01T10:00")));
         Task taskFromManager3 = taskManager.getTaskById(task3.getUid());
+        Task task4 = taskManager.createTask(new Task("New Task 4", "", Status.NEW, Duration.of(40, ChronoUnit.MINUTES), LocalDateTime.parse("2020-04-01T10:00")));
+
 /*
         Task task4 = taskManager.createTask(new Task("New Task 4", "", Status.NEW));
         Task taskFromManager4 = taskManager.getTaskById(task4.getUid());
