@@ -56,6 +56,7 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public Task createTask(Task task) {
         task.setUid(genId());
+        checkEndTime(task);
         checkIntersectionOfTasksTimes(task);
         prioritisedTasks.add(task);
         tasks.put(task.getUid(), task);
@@ -74,6 +75,9 @@ public class InMemoryTaskManager implements TaskManager {
         currentTask.setName(task.getName());
         currentTask.setStatus(task.getStatus());
         currentTask.setDescription(task.getDescription());
+        currentTask.setDuration(task.getDuration());
+        currentTask.setStartTime(task.getStartTime());
+        checkEndTime(currentTask);
         prioritisedTasks.add(currentTask);
     }
 
@@ -119,10 +123,12 @@ public class InMemoryTaskManager implements TaskManager {
             throw new NotFoundException("Can't get Epic: " + epicId + " Not found.");
         }
         subTask.setUid(genId());
+        checkEndTime(subTask);
         checkIntersectionOfTasksTimes(subTask);
         prioritisedTasks.add(subTask);
         subTasks.put(subTask.getUid(), subTask);
         currentEpic.getSubTasksUids().add(subTask.getUid());
+
         calculateStatus(subTask.getEpicId());
         return subTask;
     }
@@ -139,6 +145,9 @@ public class InMemoryTaskManager implements TaskManager {
         currentSubTask.setName(subTask.getName());
         currentSubTask.setStatus(subTask.getStatus());
         currentSubTask.setDescription(subTask.getDescription());
+        currentSubTask.setDuration(subTask.getDuration());
+        currentSubTask.setStartTime(subTask.getStartTime());
+        checkEndTime(currentSubTask);
         prioritisedTasks.add(currentSubTask);
         calculateStatus(subTask.getEpicId());
     }
@@ -182,6 +191,7 @@ public class InMemoryTaskManager implements TaskManager {
     public Epic createEpic(Epic epic) {
         epic.setUid(genId());
         epics.put(epic.getUid(), epic);
+        calculateStatus(epic.getUid());
         return epic;
     }
 
@@ -193,6 +203,7 @@ public class InMemoryTaskManager implements TaskManager {
         }
         currentEpic.setName(epic.getName());
         currentEpic.setDescription(epic.getDescription());
+        calculateStatus(epic.getUid());
     }
 
     @Override
@@ -235,11 +246,12 @@ public class InMemoryTaskManager implements TaskManager {
         Duration duration = Duration.ofMinutes(0);
         LocalDateTime end = LocalDateTime.MIN;
 
-        if (subTasks.isEmpty()) {
-            existedEpic.setStartTime(start);
-            existedEpic.setDuration(duration);
-            existedEpic.setEndTime(end);
+        if (epicSubTasksUids.isEmpty()) {
             existedEpic.setStatus(Status.NEW);
+            existedEpic.setDescription("");
+            existedEpic.setDuration(duration);
+            existedEpic.setStartTime(start);
+            existedEpic.setEndTime(end);
         } else {
             for (Integer epicSubTasksUid : epicSubTasksUids) {
 //                startTime
@@ -277,14 +289,16 @@ public class InMemoryTaskManager implements TaskManager {
         }
     }
 
-    private void checkIntersectionOfTasksTimes(Task task) {
+    private void checkIntersectionOfTasksTimes(Task task) throws ValidationException {
         for (Task pTask : prioritisedTasks) {
             if (pTask.getUid() == task.getUid()) {
                 continue;
             }
 
-            if ((task.getStartTime().isAfter(pTask.getStartTime()) && task.getStartTime().isBefore(pTask.getEndTime()))
-                    || task.getEndTime().isAfter(pTask.getStartTime()) && task.getEndTime().isBefore(pTask.getEndTime())) {
+//            if ((task.getStartTime().isAfter(pTask.getStartTime()) && task.getStartTime().isBefore(pTask.getEndTime()))
+//                    || task.getEndTime().isAfter(pTask.getStartTime()) && task.getEndTime().isBefore(pTask.getEndTime())) {
+            if ((!task.getStartTime().isBefore(pTask.getStartTime()) && !task.getStartTime().isAfter(pTask.getEndTime()))
+                    || !task.getEndTime().isBefore(pTask.getStartTime()) && !task.getEndTime().isAfter(pTask.getEndTime())) {
                 throw new ValidationException("Есть пересечение с: " + pTask.getName() + ", ID: " + pTask.getUid());
             }
         }
@@ -292,5 +306,11 @@ public class InMemoryTaskManager implements TaskManager {
 
     public List<Task> getPrioritised() {
         return new ArrayList<>(prioritisedTasks);
+    }
+
+    private void checkEndTime(Task task) {
+        if (task.getEndTime() != task.getStartTime().plus(task.getDuration())) {
+            task.setEndTime(task.getStartTime().plus(task.getDuration()));
+        }
     }
 }

@@ -1,31 +1,27 @@
 package ru.yandex.app;
 
-import ru.yandex.app.model.Epic;
 import ru.yandex.app.model.Status;
-import ru.yandex.app.model.SubTask;
 import ru.yandex.app.model.Task;
-import ru.yandex.app.service.Managers;
-import ru.yandex.app.service.TaskManager;
+import ru.yandex.app.server.HttpTaskServer;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.List;
 
 public class Main {
 
     public static void main(String[] args) {
        // InMemoryTaskManager inMemoryTaskManager = new InMemoryTaskManager();
-        TaskManager taskManager = Managers.getDefaultTaskManager();
+//        TaskManager taskManager = Managers.getDefaultTaskManager();
 
 //      ---Tasks---
-        Task task1 = taskManager.createTask(new Task("New Task 1", "", Status.NEW, Duration.of(10, ChronoUnit.MINUTES), LocalDateTime.parse("2020-01-01T10:00")));
-        System.out.println("Created task: " + task1);
-        Task task2 = taskManager.createTask(new Task("New Task 2", "", Status.NEW, Duration.of(20, ChronoUnit.MINUTES), LocalDateTime.parse("2020-02-01T10:00")));
-        System.out.println("Created task: " + task2);
-        Task task3 = taskManager.createTask(new Task("New Task 3", "", Status.NEW, Duration.of(30, ChronoUnit.MINUTES), LocalDateTime.parse("2020-03-01T10:00")));
-        Task taskFromManager3 = taskManager.getTaskById(task3.getUid());
-        Task task4 = taskManager.createTask(new Task("New Task 4", "", Status.NEW, Duration.of(40, ChronoUnit.MINUTES), LocalDateTime.parse("2020-04-01T10:00")));
+//        Task task1 = taskManager.createTask(new Task("New Task 1", "", Status.NEW, Duration.of(10, ChronoUnit.MINUTES), LocalDateTime.parse("2020-01-01T10:00")));
+//        System.out.println("Created task: " + task1);
+//        Task task2 = taskManager.createTask(new Task("New Task 2", "", Status.NEW, Duration.of(20, ChronoUnit.MINUTES), LocalDateTime.parse("2020-02-01T10:00")));
+//        System.out.println("Created task: " + task2);
+//        Task task3 = taskManager.createTask(new Task("New Task 3", "", Status.NEW, Duration.of(30, ChronoUnit.MINUTES), LocalDateTime.parse("2020-03-01T10:00")));
+//        Task taskFromManager3 = taskManager.getTaskById(task3.getUid());
+//        Task task4 = taskManager.createTask(new Task("New Task 4", "", Status.NEW, Duration.of(40, ChronoUnit.MINUTES), LocalDateTime.parse("2020-04-01T10:00")));
 
 /*
         Task task4 = taskManager.createTask(new Task("New Task 4", "", Status.NEW));
@@ -51,29 +47,30 @@ public class Main {
         Task taskFromManager12 = taskManager.getTaskById(task12.getUid());
 */
 
-        Task taskFromManager1 = taskManager.getTaskById(task1.getUid());
-        System.out.println("\nGet task by ID: " + taskFromManager1);
-        Task taskFromManager2 = taskManager.getTaskById(task2.getUid());
-        System.out.println("Get task by ID: " + taskFromManager2);
-
-        System.out.println("\nViews History: " + taskManager.getHistory());
-
-        taskFromManager1.setName("DEV Task 1");
-        taskFromManager1.setDescription("Solo Task");
-        taskFromManager1.setStatus(Status.IN_PROGRESS);
-        taskManager.updateTask(taskFromManager1);
-        taskFromManager1 = taskManager.getTaskById(task1.getUid());
-        System.out.println("\nUpdated task: " + taskFromManager1);
+//        Task taskFromManager1 = taskManager.getTaskById(task1.getUid());
+//        System.out.println("\nGet task by ID: " + taskFromManager1);
+//        Task taskFromManager2 = taskManager.getTaskById(task2.getUid());
+//        System.out.println("Get task by ID: " + taskFromManager2);
+//
+//        System.out.println("\nViews History: " + taskManager.getHistory());
+//
+//        taskFromManager1.setName("DEV Task 1");
+//        taskFromManager1.setDescription("Solo Task");
+//        taskFromManager1.setStatus(Status.IN_PROGRESS);
+//        taskManager.updateTask(taskFromManager1);
+//        taskFromManager1 = taskManager.getTaskById(task1.getUid());
+//        System.out.println("\nUpdated task: " + taskFromManager1);
 
 //        taskManager.delTaskById(taskFromManager1.getUid());
 //        System.out.println("\nDeleted task: " + taskFromManager1);
 //        taskFromManager1 = taskManager.getTaskById(task1.getUid());
 //        System.out.println("Get task by ID: " + taskFromManager1);
-//        Get All Tasks
-        List<Task> allTasks = taskManager.getAllTasks();
-        System.out.println("\nAll Tasks : " + allTasks);
 
-        System.out.println("\nViews History: " + taskManager.getHistory());
+//        Get All Tasks
+//        List<Task> allTasks = taskManager.getAllTasks();
+//        System.out.println("\nAll Tasks : " + allTasks);
+//
+//        System.out.println("\nViews History: " + taskManager.getHistory());
 
 
 //        Delete All Tasks
@@ -81,13 +78,13 @@ public class Main {
 
 //        ---Epics---
 //        create Epic
-        Epic epic1 = taskManager.createEpic(new Epic("New Epic 1"));
-        System.out.println("\n\n\nCreated Epic: " + epic1);
-        Epic epic2 = taskManager.createEpic(new Epic("New Epic 2"));
-        System.out.println("Created Epic: " + epic2);
-
-        Epic epicFromManager1 = taskManager.getEpicById(epic1.getUid());
-        System.out.println("\nGet Epic by ID: " + epicFromManager1);
+//        Epic epic1 = taskManager.createEpic(new Epic("New Epic 1"));
+//        System.out.println("\n\n\nCreated Epic: " + epic1);
+//        Epic epic2 = taskManager.createEpic(new Epic("New Epic 2"));
+//        System.out.println("Created Epic: " + epic2);
+//
+//        Epic epicFromManager1 = taskManager.getEpicById(epic1.getUid());
+//        System.out.println("\nGet Epic by ID: " + epicFromManager1);
 
         //   taskFromManager10 = taskManager.getTaskById(task10.getUid());
         //   taskFromManager3 = taskManager.getTaskById(task3.getUid());
@@ -97,13 +94,15 @@ public class Main {
 ////        Get all Epics
 //        List<Epic> allEpics = inMemoryTaskManager.getAllEpics();
 //        System.out.println("\nAll Epics: " + allEpics);
+
 //        //        Create SubTask
-        SubTask subTask1 = taskManager.createSubTask(new SubTask("New SubTask 1", "department 1", Status.NEW, Duration.of(10, ChronoUnit.MINUTES), LocalDateTime.parse("01-01-2020T10:00"), epic1.getUid()));
-        System.out.println("\nCreated SubTask: " + subTask1);
-        SubTask subTask2 = taskManager.createSubTask(new SubTask("New SubTask 2", "department 2", Status.NEW, Duration.of(20, ChronoUnit.MINUTES), LocalDateTime.parse("01-02-2020T10:00"), epic1.getUid()));
-        System.out.println("Created SubTask: " + subTask2);
-        SubTask subTask3 = taskManager.createSubTask(new SubTask("New SubTask 3", "department 3", Status.NEW, Duration.of(30, ChronoUnit.MINUTES), LocalDateTime.parse("01-03-2020T10:00"), epic2.getUid()));
-        System.out.println("Created SubTask: " + subTask3);
+//        SubTask subTask1 = taskManager.createSubTask(new SubTask("New SubTask 1", "department 1", Status.NEW, Duration.of(10, ChronoUnit.MINUTES), LocalDateTime.parse("01-01-2020T10:00"), epic1.getUid()));
+//        System.out.println("\nCreated SubTask: " + subTask1);
+//        SubTask subTask2 = taskManager.createSubTask(new SubTask("New SubTask 2", "department 2", Status.NEW, Duration.of(20, ChronoUnit.MINUTES), LocalDateTime.parse("01-02-2020T10:00"), epic1.getUid()));
+//        System.out.println("Created SubTask: " + subTask2);
+//        SubTask subTask3 = taskManager.createSubTask(new SubTask("New SubTask 3", "department 3", Status.NEW, Duration.of(30, ChronoUnit.MINUTES), LocalDateTime.parse("01-03-2020T10:00"), epic2.getUid()));
+//        System.out.println("Created SubTask: " + subTask3);
+
 //        //        Get list of Epic's Subtasks
 //        ArrayList<SubTask> listOfEpicSubTasks = inMemoryTaskManager.getListOfEpicSubTasks(epic1.getUid());
 //        System.out.println("\nList of Epic SubTasks: " + listOfEpicSubTasks);
@@ -153,6 +152,41 @@ public class Main {
 ////      Get SubTask by ID
 //        SubTask subTaskFromManager1 = taskManager.getSubTaskById(subTask1.getUid());
 //        System.out.println("Get SubTask by ID: " + subTaskFromManager1);
+
+
+//                 настройка и запуск HTTP-сервера
+//        HttpServer httpServer = HttpServer.create(new InetSocketAddress(PORT), 0);
+//        HttpServer httpTaskServer = HttpServer.create(new InetSocketAddress(PORT), 0);
+//        httpTaskServer.createContext("/posts", new PostsHandler(posts));
+
+        HttpTaskServer httpTaskServer = new HttpTaskServer();
+        httpTaskServer.start();// запускаем сервер
+
+//        System.out.println("HTTP-сервер запущен на " + PORT + " порту!");
+
+//         завершаем работу сервера
+//        httpServer.stop(1);
+//        httpTaskServer.stop(1);
+//        System.out.println("HTTP-сервер остановлен на " + PORT + " порту!");
+
+//        Epic epic1 = httpTaskServer.getTaskmanager().createEpic(new Epic("New Epic 1"));
+//        System.out.println(epic1);
+//        Epic getEpic = httpTaskServer.getTaskmanager().getEpicById(epic1.getUid());
+//        SubTask subTask1 = httpTaskServer.getTaskmanager().createSubTask(new SubTask("New SubTask 1", "department 1", Status.NEW, Duration.of(10, ChronoUnit.MINUTES), LocalDateTime.parse("2020-01-01T15:00"), epic1.getUid()));
+//        System.out.println("\nCreated SubTask: " + subTask1);
+//        SubTask subTask2 = httpTaskServer.getTaskmanager().createSubTask(new SubTask("New SubTask 2", "department 2", Status.NEW, Duration.of(20, ChronoUnit.MINUTES), LocalDateTime.parse("2020-02-01T15:00"), epic1.getUid()));
+//        System.out.println("Created SubTask: " + subTask2);
+//        SubTask getSub1 = httpTaskServer.getTaskmanager().getSubTaskById(subTask1.getUid());
+
+
+//      ---Tasks---
+        Task task1 = httpTaskServer.getTaskmanager().createTask(new Task("New Task 1", "", Status.NEW, Duration.of(10, ChronoUnit.MINUTES), LocalDateTime.parse("2020-01-01T10:00")));
+        System.out.println("Created task: " + task1);
+        Task task2 = httpTaskServer.getTaskmanager().createTask(new Task("New Task 2", "", Status.NEW, Duration.of(20, ChronoUnit.MINUTES), LocalDateTime.parse("2020-02-01T10:00")));
+        System.out.println("Created task: " + task2);
+//        Task task3 = httpTaskServer.getTaskmanager().createTask(new Task("New Task 3", "", Status.NEW, Duration.of(30, ChronoUnit.MINUTES), LocalDateTime.parse("2020-03-01T10:00")));
+//        Task taskFromManager3 = httpTaskServer.getTaskmanager().getTaskById(task3.getUid());
+//        Task task4 = httpTaskServer.getTaskmanager().createTask(new Task("New Task 4", "", Status.NEW, Duration.of(40, ChronoUnit.MINUTES), LocalDateTime.parse("2020-04-01T10:00")));
 
 
     }

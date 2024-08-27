@@ -4,7 +4,7 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 
 public class Task {
-    private int uid;
+    private Integer uid;
     private String name;
     private String description;
     private Status status;
@@ -14,6 +14,16 @@ public class Task {
 
 
     public Task(String name, String description, Status status, Duration duration, LocalDateTime startTime) {
+        this.name = name;
+        this.description = description;
+        this.status = status;
+        this.duration = duration;
+        this.startTime = startTime;
+        this.endTime = startTime.plus(duration);
+    }
+
+    public Task(Integer uid, String name, String description, Status status, Duration duration, LocalDateTime startTime) {
+        this.uid = uid;
         this.name = name;
         this.description = description;
         this.status = status;
@@ -34,7 +44,7 @@ public class Task {
         return null;
     }
 
-    public int getUid() {
+    public Integer getUid() {
         return uid;
     }
 
@@ -118,6 +128,7 @@ public class Task {
                ", description='" + description + '\'' +
                 ", duration='" + duration + '\'' +
                 ", startTime='" + startTime + '\'' +
+                ", endTime='" + endTime + '\'' +
                "}\n";
     }
 
