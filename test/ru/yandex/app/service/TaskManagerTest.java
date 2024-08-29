@@ -330,14 +330,14 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     @Test
     void checkingBoundarySituations() {
         taskManager.createTask(new Task("FB Task 1", "", Status.NEW, Duration.of(30, ChronoUnit.MINUTES), LocalDateTime.parse("2024-06-01T12:00")));
-        taskManager.createTask(new Task("FB Task 2", "", Status.NEW, Duration.of(30, ChronoUnit.MINUTES), LocalDateTime.parse("2024-06-01T13:00")));
-        taskManager.createTask(new Task("FB Task 3", "", Status.NEW, Duration.of(30, ChronoUnit.MINUTES), LocalDateTime.parse("2024-06-01T14:00")));
+        taskManager.createTask(new Task("FB Task 2", "", Status.NEW, Duration.of(30, ChronoUnit.MINUTES), LocalDateTime.parse("2024-06-01T14:00")));
+        taskManager.createTask(new Task("FB Task 3", "", Status.NEW, Duration.of(30, ChronoUnit.MINUTES), LocalDateTime.parse("2024-06-01T16:00")));
 //        до всех
         assertDoesNotThrow(() -> taskManager.createTask(new Task("FB Task 4", "", Status.NEW, Duration.of(30, ChronoUnit.MINUTES), LocalDateTime.parse("2024-06-01T11:00"))));
 //        после всех
-        assertDoesNotThrow(() -> taskManager.createTask(new Task("FB Task 5", "", Status.NEW, Duration.of(30, ChronoUnit.MINUTES), LocalDateTime.parse("2024-06-01T15:00"))));
+        assertDoesNotThrow(() -> taskManager.createTask(new Task("FB Task 5", "", Status.NEW, Duration.of(30, ChronoUnit.MINUTES), LocalDateTime.parse("2024-06-01T17:00"))));
 //        между задачами
-        assertDoesNotThrow(() -> taskManager.createTask(new Task("FB Task 6", "", Status.NEW, Duration.of(30, ChronoUnit.MINUTES), LocalDateTime.parse("2024-06-01T12:30"))));
+        assertDoesNotThrow(() -> taskManager.createTask(new Task("FB Task 6", "", Status.NEW, Duration.of(30, ChronoUnit.MINUTES), LocalDateTime.parse("2024-06-01T15:00"))));
     }
 
     @DisplayName("Проверяем пересечения. Задача пересекатеся с началом другой задачи, с окончанием, или попадает внутрь интервала другой задачи.")
