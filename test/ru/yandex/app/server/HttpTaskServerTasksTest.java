@@ -37,7 +37,7 @@ class HttpTaskServerTasksTest extends HttpTaskServerTest {
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
         assertEquals(200, response.statusCode());
 
-        List<Task> tasks = httpTaskServer.taskmanager.getAllTasks();
+        List<Task> tasks = httpTaskServer.getTaskmanager().getAllTasks();
 
         Type taskType = new TypeToken<ArrayList<Task>>() {
         }.getType();
@@ -74,7 +74,7 @@ class HttpTaskServerTasksTest extends HttpTaskServerTest {
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
         assertEquals(200, response.statusCode());
 
-        Task requestedTask = httpTaskServer.taskmanager.getTaskById(2);
+        Task requestedTask = httpTaskServer.getTaskmanager().getTaskById(2);
 
         Type taskType = new TypeToken<Task>() {
         }.getType();
@@ -136,7 +136,7 @@ class HttpTaskServerTasksTest extends HttpTaskServerTest {
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
         assertEquals(201, response.statusCode());
 
-        List<Task> tasks = httpTaskServer.taskmanager.getAllTasks();
+        List<Task> tasks = httpTaskServer.getTaskmanager().getAllTasks();
         String expected = gson.fromJson(response.body(), String.class);
         assertEquals("Задача обновлена.", expected, "Задача не обновлена.");
         assertEquals(tasks.get(updateTask2.getUid() - 1).getStatus(), updateTask2.getStatus(), "Статус задачи не сопадает");
@@ -156,8 +156,8 @@ class HttpTaskServerTasksTest extends HttpTaskServerTest {
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
         assertEquals(204, response.statusCode());
 
-        List<Task> tasks = httpTaskServer.taskmanager.getAllTasks();
-        assertFalse(tasks.contains(httpTaskServer.taskmanager.getTaskById(2)), "задача не удалена");
+        List<Task> tasks = httpTaskServer.getTaskmanager().getAllTasks();
+        assertFalse(tasks.contains(httpTaskServer.getTaskmanager().getTaskById(2)), "задача не удалена");
     }
 
 }

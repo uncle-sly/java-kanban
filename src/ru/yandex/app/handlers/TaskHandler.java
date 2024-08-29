@@ -14,8 +14,8 @@ import java.util.regex.Pattern;
 
 public class TaskHandler extends BaseHttpHandler implements HttpHandler {
 
-    TaskManager taskManager;
-    ErrorHandler errorHandler;
+    private final TaskManager taskManager;
+    private final ErrorHandler errorHandler;
 
     public TaskHandler(TaskManager taskManager, ErrorHandler errorHandler) {
         this.taskManager = taskManager;

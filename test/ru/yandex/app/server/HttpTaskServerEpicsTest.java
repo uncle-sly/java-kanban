@@ -33,7 +33,7 @@ class HttpTaskServerEpicsTest extends HttpTaskServerTest {
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
         assertEquals(200, response.statusCode());
 
-        List<Epic> epics = httpTaskServer.taskmanager.getAllEpics();
+        List<Epic> epics = httpTaskServer.getTaskmanager().getAllEpics();
 
         Type taskType = new TypeToken<ArrayList<Epic>>() {
         }.getType();
@@ -70,7 +70,7 @@ class HttpTaskServerEpicsTest extends HttpTaskServerTest {
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
         assertEquals(200, response.statusCode());
 
-        Epic requestedEpic = httpTaskServer.taskmanager.getEpicById(4);
+        Epic requestedEpic = httpTaskServer.getTaskmanager().getEpicById(4);
 
         Type taskType = new TypeToken<Epic>() {
         }.getType();
@@ -129,7 +129,7 @@ class HttpTaskServerEpicsTest extends HttpTaskServerTest {
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
         assertEquals(201, response.statusCode());
 
-        List<Epic> epics = httpTaskServer.taskmanager.getAllEpics();
+        List<Epic> epics = httpTaskServer.getTaskmanager().getAllEpics();
         String expected = gson.fromJson(response.body(), String.class);
 
         assertEquals("Эпик обновлен.", expected, "Эпик не обновлен.");
@@ -149,8 +149,8 @@ class HttpTaskServerEpicsTest extends HttpTaskServerTest {
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
         assertEquals(204, response.statusCode());
 
-        List<Epic> epics = httpTaskServer.taskmanager.getAllEpics();
-        assertFalse(epics.contains(httpTaskServer.taskmanager.getEpicById(4)), "задача не удалена");
+        List<Epic> epics = httpTaskServer.getTaskmanager().getAllEpics();
+        assertFalse(epics.contains(httpTaskServer.getTaskmanager().getEpicById(4)), "задача не удалена");
     }
 
 }

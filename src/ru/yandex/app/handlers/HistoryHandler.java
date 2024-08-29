@@ -9,8 +9,8 @@ import java.io.IOException;
 import java.util.regex.Pattern;
 
 public class HistoryHandler extends BaseHttpHandler implements HttpHandler {
-    TaskManager taskManager;
-    ErrorHandler errorHandler;
+    private final TaskManager taskManager;
+    private final ErrorHandler errorHandler;
 
     public HistoryHandler(TaskManager taskManager, ErrorHandler errorHandler) {
         this.taskManager = taskManager;

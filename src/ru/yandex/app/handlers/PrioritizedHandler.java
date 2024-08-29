@@ -10,8 +10,8 @@ import java.util.regex.Pattern;
 
 public class PrioritizedHandler extends BaseHttpHandler implements HttpHandler {
 
-    TaskManager taskManager;
-    ErrorHandler errorHandler;
+    private final TaskManager taskManager;
+    private final ErrorHandler errorHandler;
 
     public PrioritizedHandler(TaskManager taskManager, ErrorHandler errorHandler) {
         this.taskManager = taskManager;

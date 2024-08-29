@@ -33,7 +33,7 @@ class HttpTaskServerHistoryTest extends HttpTaskServerTest {
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
         assertEquals(200, response.statusCode());
 
-        List<Task> history = httpTaskServer.taskmanager.getHistory();
+        List<Task> history = httpTaskServer.getTaskmanager().getHistory();
 
         Type taskType = new TypeToken<ArrayList<Task>>() {
         }.getType();

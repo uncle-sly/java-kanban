@@ -33,7 +33,7 @@ class HttpTaskServerPrioritizedTest extends HttpTaskServerTest {
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
         assertEquals(200, response.statusCode());
 
-        List<Task> prioritized = httpTaskServer.taskmanager.getPrioritised();
+        List<Task> prioritized = httpTaskServer.getTaskmanager().getPrioritised();
 
         Type taskType = new TypeToken<ArrayList<Task>>() {
         }.getType();

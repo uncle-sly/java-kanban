@@ -11,9 +11,9 @@ import java.net.InetSocketAddress;
 public class HttpTaskServer {
 
     public static final int PORT = 8080;
-    TaskManager taskmanager;
-    HttpServer server;
-    ErrorHandler errorHandler;
+    private final TaskManager taskmanager;
+    private final HttpServer server;
+    private final ErrorHandler errorHandler;
 
     public HttpTaskServer() {
         this(Managers.getInMemoryTaskManager());

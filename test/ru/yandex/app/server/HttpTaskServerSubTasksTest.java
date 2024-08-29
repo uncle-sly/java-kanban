@@ -39,7 +39,7 @@ class HttpTaskServerSubTasksTest extends HttpTaskServerTest {
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
         assertEquals(200, response.statusCode());
 
-        List<SubTask> subTasks = httpTaskServer.taskmanager.getAllSubTasks();
+        List<SubTask> subTasks = httpTaskServer.getTaskmanager().getAllSubTasks();
         Type taskType = new TypeToken<ArrayList<SubTask>>() {
         }.getType();
         List<SubTask> expectedSubTask = gson.fromJson(response.body(), taskType);
@@ -76,7 +76,7 @@ class HttpTaskServerSubTasksTest extends HttpTaskServerTest {
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
         assertEquals(200, response.statusCode());
 
-        SubTask requestedSubTask = httpTaskServer.taskmanager.getSubTaskById(5);
+        SubTask requestedSubTask = httpTaskServer.getTaskmanager().getSubTaskById(5);
 
         Type taskType = new TypeToken<SubTask>() {
         }.getType();
@@ -141,7 +141,7 @@ class HttpTaskServerSubTasksTest extends HttpTaskServerTest {
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
         assertEquals(201, response.statusCode());
 
-        List<SubTask> subTasks = httpTaskServer.taskmanager.getAllSubTasks();
+        List<SubTask> subTasks = httpTaskServer.getTaskmanager().getAllSubTasks();
         String expected = gson.fromJson(response.body(), String.class);
 
         assertEquals("Подзадача обновлена.", expected, "Подзадача не обновлена.");
@@ -162,8 +162,8 @@ class HttpTaskServerSubTasksTest extends HttpTaskServerTest {
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
         assertEquals(204, response.statusCode());
 
-        List<SubTask> subTasks = httpTaskServer.taskmanager.getAllSubTasks();
-        assertFalse(subTasks.contains(httpTaskServer.taskmanager.getSubTaskById(5)), "задача не удалена");
+        List<SubTask> subTasks = httpTaskServer.getTaskmanager().getAllSubTasks();
+        assertFalse(subTasks.contains(httpTaskServer.getTaskmanager().getSubTaskById(5)), "задача не удалена");
     }
 
 }

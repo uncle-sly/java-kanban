@@ -12,8 +12,8 @@ import java.util.regex.Pattern;
 
 public class EpicHandler extends BaseHttpHandler implements HttpHandler {
 
-    TaskManager taskManager;
-    ErrorHandler errorHandler;
+    private final TaskManager taskManager;
+    private final ErrorHandler errorHandler;
 
     public EpicHandler(TaskManager taskManager, ErrorHandler errorHandler) {
         this.taskManager = taskManager;

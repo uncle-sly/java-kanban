@@ -13,8 +13,8 @@ import java.util.regex.Pattern;
 
 public class SubTaskHandler extends BaseHttpHandler implements HttpHandler {
 
-    TaskManager taskManager;
-    ErrorHandler errorHandler;
+    private final TaskManager taskManager;
+    private final ErrorHandler errorHandler;
 
     public SubTaskHandler(TaskManager taskManager, ErrorHandler errorHandler) {
         this.taskManager = taskManager;
