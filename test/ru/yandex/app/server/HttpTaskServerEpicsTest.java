@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static ru.yandex.app.handlers.BaseHttpHandler.gson;
 
 @DisplayName("Тесты для пути /epics")
 class HttpTaskServerEpicsTest extends HttpTaskServerTest {
@@ -36,7 +37,7 @@ class HttpTaskServerEpicsTest extends HttpTaskServerTest {
 
         Type taskType = new TypeToken<ArrayList<Epic>>() {
         }.getType();
-        List<Epic> expectedEpics = httpTaskServer.gson.fromJson(response.body(), taskType);
+        List<Epic> expectedEpics = gson.fromJson(response.body(), taskType);
         assertNotNull(expectedEpics, "Список Эпиков не вернулся");
         assertEquals(expectedEpics.size(), epics.size(), "Некорректное количество задач");
         assertEquals(epics.get(0), expectedEpics.get(0), "Задачи не сопадают");
@@ -73,7 +74,7 @@ class HttpTaskServerEpicsTest extends HttpTaskServerTest {
 
         Type taskType = new TypeToken<Epic>() {
         }.getType();
-        Epic expectedEpic = httpTaskServer.gson.fromJson(response.body(), taskType);
+        Epic expectedEpic = gson.fromJson(response.body(), taskType);
         assertNotNull(expectedEpic, "Эпик не вернулся");
         assertEquals(requestedEpic.getUid(), expectedEpic.getUid(), "ID Эпика не сопадает");
     }
@@ -96,7 +97,7 @@ class HttpTaskServerEpicsTest extends HttpTaskServerTest {
     @Test
     void shouldReturnStatusCode201AndCreatedEpic() throws IOException, InterruptedException {
         Epic newEpic3 = new Epic("New Epic 3");
-        String jsonTask = httpTaskServer.gson.toJson(newEpic3);
+        String jsonTask = gson.toJson(newEpic3);
 
         HttpClient client = HttpClient.newHttpClient();
         URI uri = URI.create("http://localhost:8080/epics");
@@ -108,8 +109,7 @@ class HttpTaskServerEpicsTest extends HttpTaskServerTest {
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
         assertEquals(201, response.statusCode());
 
-        List<Epic> epics = httpTaskServer.taskmanager.getAllEpics();
-        String expected = httpTaskServer.gson.fromJson(response.body(), String.class);
+        String expected = gson.fromJson(response.body(), String.class);
         assertEquals("Новый Эпик создан.", expected, "Эпик не создан");
     }
 
@@ -117,7 +117,7 @@ class HttpTaskServerEpicsTest extends HttpTaskServerTest {
     @Test
     void shouldReturnStatusCode201AndUpdatedTask() throws IOException, InterruptedException {
         Epic updateEpic2 = new Epic(4, "Old Epic 2");
-        String jsonTask = httpTaskServer.gson.toJson(updateEpic2);
+        String jsonTask = gson.toJson(updateEpic2);
 
         HttpClient client = HttpClient.newHttpClient();
         URI uri = URI.create("http://localhost:8080/epics");
@@ -130,7 +130,8 @@ class HttpTaskServerEpicsTest extends HttpTaskServerTest {
         assertEquals(201, response.statusCode());
 
         List<Epic> epics = httpTaskServer.taskmanager.getAllEpics();
-        String expected = httpTaskServer.gson.fromJson(response.body(), String.class);
+        String expected = gson.fromJson(response.body(), String.class);
+
         assertEquals("Эпик обновлен.", expected, "Эпик не обновлен.");
         assertEquals(epics.get(1).getName(), updateEpic2.getName(), "Имя Эпика не сопадает");
     }

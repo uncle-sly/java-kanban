@@ -1,9 +1,9 @@
 package ru.yandex.app.handlers;
 
-import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import ru.yandex.app.model.Epic;
+import ru.yandex.app.model.RequestMethod;
 import ru.yandex.app.service.TaskManager;
 
 import java.io.IOException;
@@ -13,12 +13,10 @@ import java.util.regex.Pattern;
 public class EpicHandler extends BaseHttpHandler implements HttpHandler {
 
     TaskManager taskManager;
-    Gson gson;
     ErrorHandler errorHandler;
 
-    public EpicHandler(TaskManager taskManager, Gson gson, ErrorHandler errorHandler) {
+    public EpicHandler(TaskManager taskManager, ErrorHandler errorHandler) {
         this.taskManager = taskManager;
-        this.gson = gson;
         this.errorHandler = errorHandler;
     }
 
@@ -27,13 +25,13 @@ public class EpicHandler extends BaseHttpHandler implements HttpHandler {
 
         try {
             String path = httpExchange.getRequestURI().getPath();
-            String requestMethod = httpExchange.getRequestMethod();
-            int id = 0;
+            RequestMethod method = RequestMethod.valueOf(httpExchange.getRequestMethod());
+            int id;
             String response;
 
-            switch (requestMethod) {
+            switch (method) {
 
-                case "GET": {
+                case GET: {
                     if (Pattern.matches("^/epics$", path)) {
                         response = gson.toJson(taskManager.getAllEpics());
                         sendText(httpExchange, 200, response);
@@ -66,7 +64,7 @@ public class EpicHandler extends BaseHttpHandler implements HttpHandler {
                     break;
                 }
 
-                case "POST": {
+                case POST: {
                     if (Pattern.matches("^/epics$", path)) {
                         String inputTask = new String(httpExchange.getRequestBody().readAllBytes(), StandardCharsets.UTF_8);
                         Epic taskFromJson = gson.fromJson(inputTask, Epic.class);
@@ -79,7 +77,7 @@ public class EpicHandler extends BaseHttpHandler implements HttpHandler {
                                 sendNotFound(httpExchange, 405);
                             }
                         } else {
-                            Epic newTask = taskManager.createEpic(new Epic(taskFromJson.getName()));
+                            taskManager.createEpic(new Epic(taskFromJson.getName()));
                             response = "Новый Эпик создан.";
                             sendText(httpExchange, 201, gson.toJson(response));
                         }
@@ -88,7 +86,7 @@ public class EpicHandler extends BaseHttpHandler implements HttpHandler {
                     }
                     break;
                 }
-                case "DELETE": {
+                case DELETE: {
                     if (Pattern.matches("^/epics/\\d+$", path)) {
                         String[] pathId = path.split("/");
                         id = parsePathId(pathId[2]);

@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static ru.yandex.app.handlers.BaseHttpHandler.gson;
 
 @DisplayName("Тесты для пути /history")
 class HttpTaskServerHistoryTest extends HttpTaskServerTest {
@@ -36,7 +37,7 @@ class HttpTaskServerHistoryTest extends HttpTaskServerTest {
 
         Type taskType = new TypeToken<ArrayList<Task>>() {
         }.getType();
-        List<Task> expectedHistory = httpTaskServer.gson.fromJson(response.body(), taskType);
+        List<Task> expectedHistory = gson.fromJson(response.body(), taskType);
         assertEquals(history.size(), expectedHistory.size(), "Некорректное количество задач");
     }
 

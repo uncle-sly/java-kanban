@@ -1,9 +1,9 @@
 package ru.yandex.app.handlers;
 
-import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import ru.yandex.app.exceptions.ValidationException;
+import ru.yandex.app.model.RequestMethod;
 import ru.yandex.app.model.SubTask;
 import ru.yandex.app.service.TaskManager;
 
@@ -14,12 +14,10 @@ import java.util.regex.Pattern;
 public class SubTaskHandler extends BaseHttpHandler implements HttpHandler {
 
     TaskManager taskManager;
-    Gson gson;
     ErrorHandler errorHandler;
 
-    public SubTaskHandler(TaskManager taskManager, Gson gson, ErrorHandler errorHandler) {
+    public SubTaskHandler(TaskManager taskManager, ErrorHandler errorHandler) {
         this.taskManager = taskManager;
-        this.gson = gson;
         this.errorHandler = errorHandler;
     }
 
@@ -27,13 +25,13 @@ public class SubTaskHandler extends BaseHttpHandler implements HttpHandler {
     public void handle(HttpExchange httpExchange) throws IOException {
         try {
             String path = httpExchange.getRequestURI().getPath();
-            String requestMethod = httpExchange.getRequestMethod();
-            int id = 0;
+            RequestMethod method = RequestMethod.valueOf(httpExchange.getRequestMethod());
+            int id;
             String response;
 
-            switch (requestMethod) {
+            switch (method) {
 
-                case "GET": {
+                case GET: {
                     if (Pattern.matches("^/subtasks$", path)) {
                         response = gson.toJson(taskManager.getAllSubTasks());
                         sendText(httpExchange, 200, response);
@@ -54,10 +52,16 @@ public class SubTaskHandler extends BaseHttpHandler implements HttpHandler {
                     break;
                 }
 
-                case "POST": {
+                case POST: {
                     if (Pattern.matches("^/subtasks$", path)) {
                         String inputTask = new String(httpExchange.getRequestBody().readAllBytes(), StandardCharsets.UTF_8);
-                        SubTask taskFromJson = gson.fromJson(inputTask, SubTask.class);
+                        SubTask taskFromJson;
+                        if (!inputTask.isEmpty()) {
+                            taskFromJson = gson.fromJson(inputTask, SubTask.class);
+                        } else {
+                            sendText(httpExchange, 500, gson.toJson("Empty Body"));
+                            break;
+                        }
                         try {
                             if (taskFromJson.getUid() != null) {
                                 if (taskManager.getSubTaskById(taskFromJson.getUid()) != null) {
@@ -68,7 +72,7 @@ public class SubTaskHandler extends BaseHttpHandler implements HttpHandler {
                                     sendNotFound(httpExchange, 405);
                                 }
                             } else {
-                                SubTask newTask = taskManager.createSubTask(taskFromJson);
+                                taskManager.createSubTask(taskFromJson);
                                 response = "Новая подзадача создана.";
                                 sendText(httpExchange, 201, gson.toJson(response));
                             }
@@ -80,7 +84,7 @@ public class SubTaskHandler extends BaseHttpHandler implements HttpHandler {
                     }
                     break;
                 }
-                case "DELETE": {
+                case DELETE: {
                     if (Pattern.matches("^/subtasks/\\d+$", path)) {
                         String[] pathId = path.split("/");
                         id = parsePathId(pathId[2]);

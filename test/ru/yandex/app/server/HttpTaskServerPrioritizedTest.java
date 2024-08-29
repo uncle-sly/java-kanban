@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static ru.yandex.app.handlers.BaseHttpHandler.gson;
 
 @DisplayName("Тесты для пути /prioritized")
 class HttpTaskServerPrioritizedTest extends HttpTaskServerTest {
@@ -36,7 +37,7 @@ class HttpTaskServerPrioritizedTest extends HttpTaskServerTest {
 
         Type taskType = new TypeToken<ArrayList<Task>>() {
         }.getType();
-        List<Task> expected = httpTaskServer.gson.fromJson(response.body(), taskType);
+        List<Task> expected = gson.fromJson(response.body(), taskType);
         assertEquals(prioritized.size(), expected.size(), "Некорректное количество задач");
     }
 

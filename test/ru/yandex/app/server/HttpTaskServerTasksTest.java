@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static ru.yandex.app.handlers.BaseHttpHandler.gson;
 
 @DisplayName("Тесты для пути /tasks")
 class HttpTaskServerTasksTest extends HttpTaskServerTest {
@@ -40,7 +41,7 @@ class HttpTaskServerTasksTest extends HttpTaskServerTest {
 
         Type taskType = new TypeToken<ArrayList<Task>>() {
         }.getType();
-        List<Task> expected = httpTaskServer.gson.fromJson(response.body(), taskType);
+        List<Task> expected = gson.fromJson(response.body(), taskType);
         assertNotNull(expected, "Список задач не вернулся");
         assertEquals(expected.size(), tasks.size(), "Некорректное количество задач");
         assertEquals(tasks.get(0), expected.get(0), "Задачи не сопадают");
@@ -77,7 +78,7 @@ class HttpTaskServerTasksTest extends HttpTaskServerTest {
 
         Type taskType = new TypeToken<Task>() {
         }.getType();
-        Task expectedTask = httpTaskServer.gson.fromJson(response.body(), taskType);
+        Task expectedTask = gson.fromJson(response.body(), taskType);
         assertNotNull(expectedTask, "задача не вернулась");
         assertEquals(requestedTask.getUid(), expectedTask.getUid(), "ID задач не сопадает");
     }
@@ -101,7 +102,7 @@ class HttpTaskServerTasksTest extends HttpTaskServerTest {
     void shouldReturnStatusCode201AndCreatedTask() throws IOException, InterruptedException {
         Task newTask3 = new Task("New Task 3", "", Status.NEW, Duration.of(10, ChronoUnit.MINUTES),
                 LocalDateTime.parse("2020-01-03T10:00"));
-        String jsonTask = httpTaskServer.gson.toJson(newTask3);
+        String jsonTask = gson.toJson(newTask3);
 
         HttpClient client = HttpClient.newHttpClient();
         URI uri = URI.create("http://localhost:8080/tasks");
@@ -113,8 +114,7 @@ class HttpTaskServerTasksTest extends HttpTaskServerTest {
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
         assertEquals(201, response.statusCode());
 
-        List<Task> tasks = httpTaskServer.taskmanager.getAllTasks();
-        String expected = httpTaskServer.gson.fromJson(response.body(), String.class);
+        String expected = gson.fromJson(response.body(), String.class);
         assertEquals("Новая задача создана.", expected, "задача не создана");
     }
 
@@ -124,7 +124,7 @@ class HttpTaskServerTasksTest extends HttpTaskServerTest {
         Task updateTask2 = new Task(2, "Task 2", "", Status.DONE, Duration.of(10, ChronoUnit.MINUTES),
                 LocalDateTime.parse("2020-01-03T10:00"));
 
-        String jsonTask = httpTaskServer.gson.toJson(updateTask2);
+        String jsonTask = gson.toJson(updateTask2);
 
         HttpClient client = HttpClient.newHttpClient();
         URI uri = URI.create("http://localhost:8080/tasks");
@@ -137,7 +137,7 @@ class HttpTaskServerTasksTest extends HttpTaskServerTest {
         assertEquals(201, response.statusCode());
 
         List<Task> tasks = httpTaskServer.taskmanager.getAllTasks();
-        String expected = httpTaskServer.gson.fromJson(response.body(), String.class);
+        String expected = gson.fromJson(response.body(), String.class);
         assertEquals("Задача обновлена.", expected, "Задача не обновлена.");
         assertEquals(tasks.get(updateTask2.getUid() - 1).getStatus(), updateTask2.getStatus(), "Статус задачи не сопадает");
     }
