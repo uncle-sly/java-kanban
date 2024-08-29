@@ -160,4 +160,72 @@ class HttpTaskServerTasksTest extends HttpTaskServerTest {
         assertFalse(tasks.contains(httpTaskServer.getTaskmanager().getTaskById(2)), "задача не удалена");
     }
 
+    @DisplayName("Проверяем пересечения: с началом другой задачи.")
+    @Test
+    void shouldReturnStatusCode406BecauseOfIntersectionWithBeginning() throws IOException, InterruptedException {
+
+        HttpClient client = HttpClient.newHttpClient();
+        URI uri = URI.create("http://localhost:8080/tasks");
+
+//        пересекается с началом другой задачи
+        Task newTask4 = new Task("Http Task 4", "", Status.NEW, Duration.of(30, ChronoUnit.MINUTES), LocalDateTime.parse("2024-09-01T12:45"));
+        String jsonTask = gson.toJson(newTask4);
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .POST(HttpRequest.BodyPublishers.ofString(jsonTask))
+                .uri(uri)
+                .build();
+
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        assertEquals(406, response.statusCode());
+        String expected = gson.fromJson(response.body(), String.class);
+        assertEquals("Есть пересечение с другими задачами.", expected);
+    }
+
+
+    @DisplayName("Проверяем пересечения: с окончанием другой задачи.")
+    @Test
+    void shouldReturnStatusCode406BecauseOfIntersectionWithEnd() throws IOException, InterruptedException {
+
+        HttpClient client = HttpClient.newHttpClient();
+        URI uri = URI.create("http://localhost:8080/tasks");
+
+//        пересекается с окончанием другой задачи
+        Task newTask4 = new Task("Http Task 5", "", Status.NEW, Duration.of(30, ChronoUnit.MINUTES), LocalDateTime.parse("2024-09-01T14:25"));
+        String jsonTask = gson.toJson(newTask4);
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .POST(HttpRequest.BodyPublishers.ofString(jsonTask))
+                .uri(uri)
+                .build();
+
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        assertEquals(406, response.statusCode());
+        String expected = gson.fromJson(response.body(), String.class);
+        assertEquals("Есть пересечение с другими задачами.", expected);
+    }
+
+
+    @DisplayName("Проверяем пересечения: попадает внутрь интервала другой задачи.")
+    @Test
+    void shouldReturnStatusCode406BecauseOfIntersectionInside() throws IOException, InterruptedException {
+
+        HttpClient client = HttpClient.newHttpClient();
+        URI uri = URI.create("http://localhost:8080/tasks");
+
+//        попадает внутрь другой задачи
+        Task newTask4 = new Task("Http Task 6", "", Status.NEW, Duration.of(10, ChronoUnit.MINUTES), LocalDateTime.parse("2024-09-01T13:10"));
+        String jsonTask = gson.toJson(newTask4);
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .POST(HttpRequest.BodyPublishers.ofString(jsonTask))
+                .uri(uri)
+                .build();
+
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        assertEquals(406, response.statusCode());
+        String expected = gson.fromJson(response.body(), String.class);
+        assertEquals("Есть пересечение с другими задачами.", expected);
+    }
+
 }

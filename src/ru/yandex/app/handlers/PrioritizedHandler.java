@@ -29,7 +29,7 @@ public class PrioritizedHandler extends BaseHttpHandler implements HttpHandler {
                 response = gson.toJson(taskManager.getPrioritised());
                 sendText(httpExchange, 200, response);
             } else {
-                sendNotFound(httpExchange, 405);
+                sendNotFound(httpExchange, 404);
             }
 
         } catch (Exception e) {

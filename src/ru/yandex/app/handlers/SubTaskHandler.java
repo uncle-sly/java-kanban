@@ -47,7 +47,7 @@ public class SubTaskHandler extends BaseHttpHandler implements HttpHandler {
                             }
                         }
                     } else {
-                        sendNotFound(httpExchange, 500);
+                        sendNotFound(httpExchange, 404);
                     }
                     break;
                 }
@@ -69,7 +69,7 @@ public class SubTaskHandler extends BaseHttpHandler implements HttpHandler {
                                     response = "Подзадача обновлена.";
                                     sendText(httpExchange, 201, gson.toJson(response));
                                 } else {
-                                    sendNotFound(httpExchange, 405);
+                                    sendNotFound(httpExchange, 404);
                                 }
                             } else {
                                 taskManager.createSubTask(taskFromJson);
@@ -80,7 +80,7 @@ public class SubTaskHandler extends BaseHttpHandler implements HttpHandler {
                             errorHandler.handle(httpExchange, e);
                         }
                     } else {
-                        sendNotFound(httpExchange, 405);
+                        sendNotFound(httpExchange, 404);
                     }
                     break;
                 }

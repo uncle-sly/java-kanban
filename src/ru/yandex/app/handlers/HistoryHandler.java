@@ -29,7 +29,7 @@ public class HistoryHandler extends BaseHttpHandler implements HttpHandler {
                 response = gson.toJson(taskManager.getHistory());
                 sendText(httpExchange, 200, response);
             } else {
-                sendNotFound(httpExchange, 405);
+                sendNotFound(httpExchange, 404);
             }
 
         } catch (Exception e) {

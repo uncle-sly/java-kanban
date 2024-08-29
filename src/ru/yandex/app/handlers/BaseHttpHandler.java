@@ -29,17 +29,19 @@ public class BaseHttpHandler {
     }
 
     protected void sendNotFound(HttpExchange h, int code) throws IOException {
-        byte[] resp = "Not found.".getBytes(StandardCharsets.UTF_8);
-        h.getResponseHeaders().add("Content-Type", "text/plain;charset=utf-8");
+        byte[] resp = gson.toJson("Not found.").getBytes(StandardCharsets.UTF_8);
+        h.getResponseHeaders().add("Content-Type", "application/json;charset=utf-8");
         h.sendResponseHeaders(code, 0);
         h.getResponseBody().write(resp);
+        h.close();
     }
 
     protected void sendHasInteractions(HttpExchange h, int code) throws IOException {
-        byte[] resp = "Есть пересечение с другими задачами.".getBytes(StandardCharsets.UTF_8);
-        h.getResponseHeaders().add("Content-Type", "text/plain;charset=utf-8");
+        byte[] resp = gson.toJson("Есть пересечение с другими задачами.").getBytes(StandardCharsets.UTF_8);
+        h.getResponseHeaders().add("Content-Type", "application/json;charset=utf-8");
         h.sendResponseHeaders(code, 0);
         h.getResponseBody().write(resp);
+        h.close();
     }
 
     protected int parsePathId(String path) {

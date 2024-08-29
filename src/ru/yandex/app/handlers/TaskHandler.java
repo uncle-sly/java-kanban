@@ -71,7 +71,7 @@ public class TaskHandler extends BaseHttpHandler implements HttpHandler {
                                     response = "Задача обновлена.";
                                     sendText(httpExchange, 201, gson.toJson(response));
                                 } else {
-                                    sendNotFound(httpExchange, 405);
+                                    sendNotFound(httpExchange, 404);
                                 }
                             } else {
                                 taskManager.createTask(taskFromJson);
@@ -82,7 +82,7 @@ public class TaskHandler extends BaseHttpHandler implements HttpHandler {
                             errorHandler.handle(httpExchange, e);
                         }
                     } else {
-                        sendNotFound(httpExchange, 405);
+                        sendNotFound(httpExchange, 404);
                     }
                     break;
                 }

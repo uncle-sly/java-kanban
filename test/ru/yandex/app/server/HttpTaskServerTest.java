@@ -22,13 +22,27 @@ class HttpTaskServerTest {
         httpTaskServer = new HttpTaskServer();
         httpTaskServer.start();
 
-        Task task1 = httpTaskServer.getTaskmanager().createTask(new Task("New Task 1", "", Status.NEW, Duration.of(10, ChronoUnit.MINUTES), LocalDateTime.parse("2020-01-01T10:00")));
+        httpTaskServer.getTaskmanager().createTask(new Task("New Task 1", "", Status.NEW, Duration.of(10, ChronoUnit.MINUTES), LocalDateTime.parse("2020-01-01T10:00")));
         Task task2 = httpTaskServer.getTaskmanager().createTask(new Task("New Task 2", "", Status.NEW, Duration.of(20, ChronoUnit.MINUTES), LocalDateTime.parse("2020-02-01T10:00")));
         httpTaskServer.getTaskmanager().getTaskById(task2.getUid());
         Epic epic1 = httpTaskServer.getTaskmanager().createEpic(new Epic("New Epic 1"));
-        Epic epic2 = httpTaskServer.getTaskmanager().createEpic(new Epic("New Epic 2"));
-        SubTask subTask1 = httpTaskServer.getTaskmanager().createSubTask(new SubTask("New SubTask 1", "department 1", Status.NEW, Duration.of(10, ChronoUnit.MINUTES), LocalDateTime.parse("2020-01-01T15:00"), epic1.getUid()));
-        SubTask subTask2 = httpTaskServer.getTaskmanager().createSubTask(new SubTask("New SubTask 2", "department 2", Status.NEW, Duration.of(20, ChronoUnit.MINUTES), LocalDateTime.parse("2020-02-01T15:00"), epic1.getUid()));
+        httpTaskServer.getTaskmanager().createEpic(new Epic("New Epic 2"));
+        httpTaskServer.getTaskmanager().createSubTask(new SubTask("New SubTask 1", "department 1", Status.NEW, Duration.of(10, ChronoUnit.MINUTES), LocalDateTime.parse("2020-01-01T15:00"), epic1.getUid()));
+        httpTaskServer.getTaskmanager().createSubTask(new SubTask("New SubTask 2", "department 2", Status.NEW, Duration.of(20, ChronoUnit.MINUTES), LocalDateTime.parse("2020-02-01T15:00"), epic1.getUid()));
+
+        httpTaskServer.getTaskmanager().createTask(
+                new Task("Http Task 1", "", Status.NEW, Duration.of(30, ChronoUnit.MINUTES), LocalDateTime.parse("2024-09-01T12:00")));
+        httpTaskServer.getTaskmanager().createTask(
+                new Task("Http Task 2", "", Status.NEW, Duration.of(30, ChronoUnit.MINUTES), LocalDateTime.parse("2024-09-01T13:00")));
+        httpTaskServer.getTaskmanager().createTask(
+                new Task("Http Task 3", "", Status.NEW, Duration.of(30, ChronoUnit.MINUTES), LocalDateTime.parse("2024-09-01T14:00")));
+
+        httpTaskServer.getTaskmanager().createSubTask(
+                new SubTask("Http SubTask 10", "department 10", Status.NEW, Duration.of(30, ChronoUnit.MINUTES), LocalDateTime.parse("2024-08-01T16:00"), epic1.getUid()));
+        httpTaskServer.getTaskmanager().createSubTask(
+                new SubTask("Http SubTask 11", "department 11", Status.NEW, Duration.of(30, ChronoUnit.MINUTES), LocalDateTime.parse("2024-08-01T17:00"), epic1.getUid()));
+        httpTaskServer.getTaskmanager().createSubTask(
+                new SubTask("Http SubTask 12", "department 12", Status.NEW, Duration.of(30, ChronoUnit.MINUTES), LocalDateTime.parse("2024-08-01T18:00"), epic1.getUid()));
 
     }
 

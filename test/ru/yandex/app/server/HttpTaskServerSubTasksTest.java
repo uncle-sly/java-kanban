@@ -21,7 +21,6 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static ru.yandex.app.handlers.BaseHttpHandler.gson;
-//import static ru.yandex.app.handlers.BaseHttpHandler.gson;
 
 @DisplayName("Тесты для пути /subtasks")
 class HttpTaskServerSubTasksTest extends HttpTaskServerTest {
@@ -60,7 +59,7 @@ class HttpTaskServerSubTasksTest extends HttpTaskServerTest {
                 .build();
 
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-        assertEquals(500, response.statusCode());
+        assertEquals(404, response.statusCode());
     }
 
     @DisplayName("получаем подзадачу и проверяем код ответа 200, GET /subtasks/id")
@@ -164,6 +163,75 @@ class HttpTaskServerSubTasksTest extends HttpTaskServerTest {
 
         List<SubTask> subTasks = httpTaskServer.getTaskmanager().getAllSubTasks();
         assertFalse(subTasks.contains(httpTaskServer.getTaskmanager().getSubTaskById(5)), "задача не удалена");
+    }
+
+
+    @DisplayName("Проверяем пересечения: с началом другой подзадачи.")
+    @Test
+    void shouldReturnStatusCode406BecauseOfIntersectionWithBeginningSubTask() throws IOException, InterruptedException {
+
+        HttpClient client = HttpClient.newHttpClient();
+        URI uri = URI.create("http://localhost:8080/tasks");
+
+//        пересекается с началом другой подзадачи
+        SubTask newTask4 = new SubTask("Http SubTask 15", "", Status.NEW, Duration.of(30, ChronoUnit.MINUTES), LocalDateTime.parse("2024-08-01T16:45"), 3);
+        String jsonTask = gson.toJson(newTask4);
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .POST(HttpRequest.BodyPublishers.ofString(jsonTask))
+                .uri(uri)
+                .build();
+
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        assertEquals(406, response.statusCode());
+        String expected = gson.fromJson(response.body(), String.class);
+        assertEquals("Есть пересечение с другими задачами.", expected);
+    }
+
+
+    @DisplayName("Проверяем пересечения: с окончанием другой подзадачи.")
+    @Test
+    void shouldReturnStatusCode406BecauseOfIntersectionWithEndSubTask() throws IOException, InterruptedException {
+
+        HttpClient client = HttpClient.newHttpClient();
+        URI uri = URI.create("http://localhost:8080/tasks");
+
+//        пересекается с окончанием другой подзадачи
+        SubTask newTask4 = new SubTask("Http SubTask 15", "", Status.NEW, Duration.of(30, ChronoUnit.MINUTES), LocalDateTime.parse("2024-08-01T18:25"), 3);
+        String jsonTask = gson.toJson(newTask4);
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .POST(HttpRequest.BodyPublishers.ofString(jsonTask))
+                .uri(uri)
+                .build();
+
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        assertEquals(406, response.statusCode());
+        String expected = gson.fromJson(response.body(), String.class);
+        assertEquals("Есть пересечение с другими задачами.", expected);
+    }
+
+
+    @DisplayName("Проверяем пересечения: попадает внутрь интервала другой подзадачи.")
+    @Test
+    void shouldReturnStatusCode406BecauseOfIntersectionInsideSubTask() throws IOException, InterruptedException {
+
+        HttpClient client = HttpClient.newHttpClient();
+        URI uri = URI.create("http://localhost:8080/tasks");
+
+//        попадает внутрь другой подзадачи
+        SubTask newTask4 = new SubTask("Http SubTask 15", "", Status.NEW, Duration.of(10, ChronoUnit.MINUTES), LocalDateTime.parse("2024-08-01T16:10"), 3);
+        String jsonTask = gson.toJson(newTask4);
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .POST(HttpRequest.BodyPublishers.ofString(jsonTask))
+                .uri(uri)
+                .build();
+
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        assertEquals(406, response.statusCode());
+        String expected = gson.fromJson(response.body(), String.class);
+        assertEquals("Есть пересечение с другими задачами.", expected);
     }
 
 }

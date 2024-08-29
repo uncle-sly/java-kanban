@@ -59,7 +59,7 @@ public class EpicHandler extends BaseHttpHandler implements HttpHandler {
                         }
 
                     } else {
-                        sendNotFound(httpExchange, 500);
+                        sendNotFound(httpExchange, 404);
                     }
                     break;
                 }
@@ -74,7 +74,7 @@ public class EpicHandler extends BaseHttpHandler implements HttpHandler {
                                 response = "Эпик обновлен.";
                                 sendText(httpExchange, 201, gson.toJson(response));
                             } else {
-                                sendNotFound(httpExchange, 405);
+                                sendNotFound(httpExchange, 404);
                             }
                         } else {
                             taskManager.createEpic(new Epic(taskFromJson.getName()));
@@ -82,7 +82,7 @@ public class EpicHandler extends BaseHttpHandler implements HttpHandler {
                             sendText(httpExchange, 201, gson.toJson(response));
                         }
                     } else {
-                        sendNotFound(httpExchange, 405);
+                        sendNotFound(httpExchange, 404);
                     }
                     break;
                 }

@@ -54,7 +54,7 @@ class HttpTaskServerEpicsTest extends HttpTaskServerTest {
                 .build();
 
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-        assertEquals(500, response.statusCode());
+        assertEquals(404, response.statusCode());
     }
 
     @DisplayName("получаем Эпик и проверяем код ответа 200, GET /epics/id")
